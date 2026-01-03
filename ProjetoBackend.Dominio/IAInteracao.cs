@@ -11,10 +11,7 @@
 
         protected IAInteracao() { }
 
-        public IAInteracao(
-            int usuarioId,
-            string pergunta,
-            string resposta)
+        public IAInteracao(int usuarioId,string pergunta,string resposta)
         {
             if (string.IsNullOrWhiteSpace(pergunta))
                 throw new ArgumentException("Pergunta é obrigatória.");

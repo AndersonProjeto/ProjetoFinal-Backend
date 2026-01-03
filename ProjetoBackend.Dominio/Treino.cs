@@ -1,6 +1,4 @@
-﻿using ProjetoBackend.Dominio.ProjetoBackend.Dominio;
-
-namespace ProjetoBackend.Dominio
+﻿namespace ProjetoBackend.Dominio
 {
     public class Treino
     {
@@ -16,19 +14,14 @@ namespace ProjetoBackend.Dominio
 
         public Treino(int usuarioId, string nomeTreino)
         {
+            if(string.IsNullOrWhiteSpace(nomeTreino))
+                throw new ArgumentException("Nome do treino é obrigatório");
             UsuarioId = usuarioId;
             NomeTreino = nomeTreino;
             DataCriacao = DateTime.UtcNow;
 
             TreinoExercicios = new List<TreinoExercicio>();
         }
-        public void AtualizarNome(string Novonome)
-        {
-            if (!string.IsNullOrWhiteSpace(Novonome))
-            {
-                throw new ArgumentException("O nome do treino não pode ser vazio ou nulo");
-            }
-            NomeTreino = Novonome;
-        }
+    
     }
 }

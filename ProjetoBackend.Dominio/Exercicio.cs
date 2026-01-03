@@ -1,6 +1,4 @@
-﻿using ProjetoBackend.Dominio.ProjetoBackend.Dominio;
-
-namespace ProjetoBackend.Dominio
+﻿namespace ProjetoBackend.Dominio
 {
     public class Exercicio
     {
@@ -13,10 +11,7 @@ namespace ProjetoBackend.Dominio
 
         protected Exercicio() { }
 
-        public Exercicio(
-            string nome,
-            string grupoMuscular,
-            string equipamento)
+        public Exercicio(string nome,string grupoMuscular,string equipamento)
         {
             if (string.IsNullOrWhiteSpace(nome))
                 throw new ArgumentException("Nome do exercício é obrigatório");
