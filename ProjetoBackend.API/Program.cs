@@ -1,3 +1,6 @@
+using Microsoft.EntityFrameworkCore;
+using ProjetoBackend.Repositorio.Contexto;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -13,6 +16,12 @@ if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
 }
+
+builder.Services.AddDbContext<ProjetoContexto>(options =>
+    options.UseSqlServer(
+        builder.Configuration.GetConnectionString("DefaultConnection")
+    )
+);
 
 app.UseHttpsRedirection();
 

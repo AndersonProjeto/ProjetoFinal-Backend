@@ -16,12 +16,7 @@
 
         protected Evolucao() { }
 
-        public Evolucao(
-            int usuarioId,
-            decimal pesoKg,
-            decimal? cinturaCm,
-            decimal? bracoCm,
-            decimal? coxaCm)
+        public Evolucao(int usuarioId,decimal pesoKg,decimal? cinturaCm,decimal? bracoCm,decimal? coxaCm)
         {
             if (pesoKg <= 0)
                 throw new ArgumentException("Peso tem que ser maior que zero");
