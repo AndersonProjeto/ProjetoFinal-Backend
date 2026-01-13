@@ -1,5 +1,4 @@
-﻿
-namespace ProjetoBackend.Dominio
+﻿namespace ProjetoBackend.Dominio.Entidade
 {
 
     public class TreinoExercicio

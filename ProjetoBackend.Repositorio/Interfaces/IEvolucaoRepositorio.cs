@@ -1,5 +1,5 @@
 ﻿using ProjetoBackend.Aplicacao.DTOs.Evolucao;
-using ProjetoBackend.Dominio;
+using ProjetoBackend.Dominio.Entidade;
 
 namespace ProjetoBackend.Repositorio.Interfaces
 {

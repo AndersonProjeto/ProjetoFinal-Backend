@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using ProjetoBackend.Dominio;
+using ProjetoBackend.Dominio.Entidade;
 using ProjetoBackend.Repositorio.Configuracoes;
 
 namespace ProjetoBackend.Repositorio.Contexto

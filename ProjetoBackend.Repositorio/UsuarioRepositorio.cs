@@ -1,10 +1,9 @@
 ﻿using Dapper;
 using ProjetoBackend.Aplicacao.DTOs.Usuario;
-using ProjetoBackend.Dominio;
+using ProjetoBackend.Dominio.Entidade;
 using ProjetoBackend.Repositorio.Contexto;
 using ProjetoBackend.Repositorio.Interfaces;
 using System.Data;
-using System.Threading.Tasks;
 
 namespace ProjetoBackend.Repositorio
 {
@@ -30,7 +29,7 @@ namespace ProjetoBackend.Repositorio
             );
         }
 
-        public async Task AualizarUsuario(Usuario usuario)
+        public async Task AtualizarUsuario(Usuario usuario)
         {
             await _connection.ExecuteAsync(
                 "spUsuarioAtualizar",
@@ -62,8 +61,20 @@ namespace ProjetoBackend.Repositorio
         {
             return await _connection.QuerySingleOrDefaultAsync<Usuario>(
                 "spUsuarioObter",
-                new { 
-                    UsuarioId = usuarioId 
+                new
+                {
+                    UsuarioId = usuarioId
+                },
+                commandType: CommandType.StoredProcedure
+            );
+        }
+        public async Task<Usuario?> ObterPorEmail(string email)
+        {
+            return await _connection.QuerySingleOrDefaultAsync<Usuario>(
+                "spUsuarioObterPorEmail",
+                new
+                {
+                    Email = email
                 },
                 commandType: CommandType.StoredProcedure
             );
@@ -79,6 +90,14 @@ namespace ProjetoBackend.Repositorio
         {
             return await _connection.QueryFirstOrDefaultAsync<UsuarioUltimaEvolucaoDto>(
                 "SELECT * FROM vwUsuarioUltimaEvolucao WHERE UsuarioId = @UsuarioId",
+                new { UsuarioId = usuarioId }
+            );
+        }
+
+        public async Task<UsuarioDetalhesDTO?> ObterUsuarioDetalhes(int usuarioId)
+        {
+            return await _connection.QuerySingleOrDefaultAsync<UsuarioDetalhesDTO>(
+                "SELECT * FROM vwUsuarioDetalhes WHERE UsuarioId = @UsuarioId",
                 new { UsuarioId = usuarioId }
             );
         }

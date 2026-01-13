@@ -1,6 +1,7 @@
 ﻿using Dapper;
 using ProjetoBackend.Aplicacao.DTOs.Exercicio;
-using ProjetoBackend.Dominio;
+using ProjetoBackend.Dominio.DTOs.Exercicio;
+using ProjetoBackend.Dominio.Entidade;
 using ProjetoBackend.Repositorio.Contexto;
 using ProjetoBackend.Repositorio.Interfaces;
 using System.Data;
@@ -93,6 +94,13 @@ namespace ProjetoBackend.Repositorio
                 {
                     ExercicioId = exercicioId
                 });
+        }
+        public async Task<ExercicioDetalhadoDto?> ObterExercicioDetalhado(int exercicioId)
+        {
+            return await _connection.QuerySingleOrDefaultAsync<ExercicioDetalhadoDto>(
+                "SELECT * FROM vwExercicioDetalhado WHERE ExercicioId = @ExercicioId",
+                new { ExercicioId = exercicioId }
+            );
         }
     }
 }

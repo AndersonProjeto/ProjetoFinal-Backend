@@ -1,5 +1,5 @@
 ﻿using ProjetoBackend.Aplicacao.DTOs.Treino;
-using ProjetoBackend.Dominio;
+using ProjetoBackend.Dominio.Entidade;
 using System;
 using System.Collections.Generic;
 using System.Text;
