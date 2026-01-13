@@ -1,5 +1,6 @@
 ﻿using ProjetoBackend.Aplicacao.DTOs.Exercicio;
-using ProjetoBackend.Dominio;
+using ProjetoBackend.Dominio.DTOs.Exercicio;
+using ProjetoBackend.Dominio.Entidade;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -15,5 +16,6 @@ namespace ProjetoBackend.Repositorio.Interfaces
         Task<IEnumerable<Exercicio>> ObterTodosExercicios();
         Task<IEnumerable<Exercicio>> ListarPorGrupoMuscular(string grupoMuscular);
         Task<ExercicioResumoDto?> TotalTreinosPorExercicio(int exercicioId);
+        Task<ExercicioDetalhadoDto?> ObterExercicioDetalhado(int exercicioId);
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace ProjetoBackend.Dominio
+﻿namespace ProjetoBackend.Dominio.Entidade
 {
     public class Treino
     {
@@ -22,6 +22,13 @@
 
             TreinoExercicios = new List<TreinoExercicio>();
         }
-    
+        public void AtualizarNome(string novoNome)
+        {
+            if (string.IsNullOrWhiteSpace(novoNome))
+                throw new ArgumentException("O nome do treino não pode ser vazio.");
+
+            NomeTreino = novoNome;
+        }
+
     }
 }

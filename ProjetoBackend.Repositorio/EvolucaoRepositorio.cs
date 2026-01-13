@@ -1,6 +1,6 @@
 ﻿using Dapper;
 using ProjetoBackend.Aplicacao.DTOs.Evolucao;
-using ProjetoBackend.Dominio;
+using ProjetoBackend.Dominio.Entidade;
 using ProjetoBackend.Repositorio.Contexto;
 using ProjetoBackend.Repositorio.Interfaces;
 using System.Data;

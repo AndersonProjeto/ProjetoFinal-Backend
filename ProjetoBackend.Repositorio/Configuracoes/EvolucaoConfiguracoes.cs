@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using ProjetoBackend.Dominio;
+using ProjetoBackend.Dominio.Entidade;
 
 namespace ProjetoBackend.Repositorio.Configuracoes
 {

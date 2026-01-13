@@ -1,11 +1,11 @@
 CREATE VIEW vwEvolucaoHistorico
 AS
 SELECT
-    EvolucaoId,
-    UsuarioId,
-    PesoKg,
-    CinturaCm,
-    BracoCm,
-    CoxaCm,
-    DataRegistro
-FROM Evolucoes;
+    e.EvolucaoId,
+    e.UsuarioId,
+    e.PesoKg,
+    e.CinturaCm,
+    e.BracoCm,
+    e.CoxaCm,
+    e.DataRegistro
+FROM Evolucoes e;
