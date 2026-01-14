@@ -1,23 +1,26 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.AspNetCore.Authentication.JwtBearer; 
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using ProjetoBackend.Repositorio.Contexto;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-
-
+// Controllers
 builder.Services.AddControllers();
-builder.Services.AddOpenApi();
 
+// Swagger / OpenAPI (.NET 8)
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 
+// DbContext
 builder.Services.AddDbContext<ProjetoContexto>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
 );
 
-
-builder.Services.AddAuthentication(options => {
+// JWT
+builder.Services.AddAuthentication(options =>
+{
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
 })
@@ -37,18 +40,16 @@ builder.Services.AddAuthentication(options => {
     };
 });
 
-
 var app = builder.Build();
 
-
-
+// Pipeline
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 
 app.UseHttpsRedirection();
-
 
 app.UseAuthentication();
 app.UseAuthorization();

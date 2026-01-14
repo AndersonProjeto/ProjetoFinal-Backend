@@ -12,20 +12,20 @@ using ProjetoBackend.Repositorio.Contexto;
 namespace ProjetoBackend.Repositorio.Migrations
 {
     [DbContext(typeof(ProjetoContexto))]
-    [Migration("20260102210458_CriacaoMiggrations")]
-    partial class CriacaoMiggrations
+    [Migration("20260114130452_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "10.0.1")
+                .HasAnnotation("ProductVersion", "8.0.6")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("ProjetoBackend.Dominio.Evolucao", b =>
+            modelBuilder.Entity("ProjetoBackend.Dominio.Entidade.Evolucao", b =>
                 {
                     b.Property<int>("EvolucaoId")
                         .ValueGeneratedOnAdd()
@@ -67,7 +67,7 @@ namespace ProjetoBackend.Repositorio.Migrations
                     b.ToTable("Evolucoes", (string)null);
                 });
 
-            modelBuilder.Entity("ProjetoBackend.Dominio.Exercicio", b =>
+            modelBuilder.Entity("ProjetoBackend.Dominio.Entidade.Exercicio", b =>
                 {
                     b.Property<int>("ExercicioId")
                         .ValueGeneratedOnAdd()
@@ -99,7 +99,7 @@ namespace ProjetoBackend.Repositorio.Migrations
                     b.ToTable("Exercicios", (string)null);
                 });
 
-            modelBuilder.Entity("ProjetoBackend.Dominio.IAInteracao", b =>
+            modelBuilder.Entity("ProjetoBackend.Dominio.Entidade.IAInteracao", b =>
                 {
                     b.Property<int>("IAInteracaoId")
                         .ValueGeneratedOnAdd()
@@ -114,7 +114,8 @@ namespace ProjetoBackend.Repositorio.Migrations
 
                     b.Property<string>("Pergunta")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)")
                         .HasColumnName("Pergunta");
 
                     b.Property<string>("Resposta")
@@ -133,7 +134,7 @@ namespace ProjetoBackend.Repositorio.Migrations
                     b.ToTable("IAInteracoes", (string)null);
                 });
 
-            modelBuilder.Entity("ProjetoBackend.Dominio.Treino", b =>
+            modelBuilder.Entity("ProjetoBackend.Dominio.Entidade.Treino", b =>
                 {
                     b.Property<int>("TreinoId")
                         .ValueGeneratedOnAdd()
@@ -163,7 +164,7 @@ namespace ProjetoBackend.Repositorio.Migrations
                     b.ToTable("Treinos", (string)null);
                 });
 
-            modelBuilder.Entity("ProjetoBackend.Dominio.TreinoExercicio", b =>
+            modelBuilder.Entity("ProjetoBackend.Dominio.Entidade.TreinoExercicio", b =>
                 {
                     b.Property<int>("TreinoExercicioId")
                         .ValueGeneratedOnAdd()
@@ -201,7 +202,7 @@ namespace ProjetoBackend.Repositorio.Migrations
                     b.ToTable("TreinoExercicios", (string)null);
                 });
 
-            modelBuilder.Entity("ProjetoBackend.Dominio.Usuario", b =>
+            modelBuilder.Entity("ProjetoBackend.Dominio.Entidade.Usuario", b =>
                 {
                     b.Property<int>("UsuarioId")
                         .ValueGeneratedOnAdd()
@@ -215,8 +216,10 @@ namespace ProjetoBackend.Repositorio.Migrations
                         .HasColumnName("AlturaCm");
 
                     b.Property<DateTime>("DataCriacao")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasColumnName("DataCriacao");
+                        .HasColumnName("DataCriacao")
+                        .HasDefaultValueSql("SYSUTCDATETIME()");
 
                     b.Property<DateTime>("DataNascimento")
                         .HasColumnType("datetime2")
@@ -247,9 +250,9 @@ namespace ProjetoBackend.Repositorio.Migrations
                     b.ToTable("Usuarios", (string)null);
                 });
 
-            modelBuilder.Entity("ProjetoBackend.Dominio.Evolucao", b =>
+            modelBuilder.Entity("ProjetoBackend.Dominio.Entidade.Evolucao", b =>
                 {
-                    b.HasOne("ProjetoBackend.Dominio.Usuario", "Usuario")
+                    b.HasOne("ProjetoBackend.Dominio.Entidade.Usuario", "Usuario")
                         .WithMany("Evolucoes")
                         .HasForeignKey("UsuarioId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -258,9 +261,9 @@ namespace ProjetoBackend.Repositorio.Migrations
                     b.Navigation("Usuario");
                 });
 
-            modelBuilder.Entity("ProjetoBackend.Dominio.IAInteracao", b =>
+            modelBuilder.Entity("ProjetoBackend.Dominio.Entidade.IAInteracao", b =>
                 {
-                    b.HasOne("ProjetoBackend.Dominio.Usuario", "Usuario")
+                    b.HasOne("ProjetoBackend.Dominio.Entidade.Usuario", "Usuario")
                         .WithMany("IAInteracoes")
                         .HasForeignKey("UsuarioId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -269,9 +272,9 @@ namespace ProjetoBackend.Repositorio.Migrations
                     b.Navigation("Usuario");
                 });
 
-            modelBuilder.Entity("ProjetoBackend.Dominio.Treino", b =>
+            modelBuilder.Entity("ProjetoBackend.Dominio.Entidade.Treino", b =>
                 {
-                    b.HasOne("ProjetoBackend.Dominio.Usuario", "Usuario")
+                    b.HasOne("ProjetoBackend.Dominio.Entidade.Usuario", "Usuario")
                         .WithMany("Treinos")
                         .HasForeignKey("UsuarioId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -280,15 +283,15 @@ namespace ProjetoBackend.Repositorio.Migrations
                     b.Navigation("Usuario");
                 });
 
-            modelBuilder.Entity("ProjetoBackend.Dominio.TreinoExercicio", b =>
+            modelBuilder.Entity("ProjetoBackend.Dominio.Entidade.TreinoExercicio", b =>
                 {
-                    b.HasOne("ProjetoBackend.Dominio.Exercicio", "Exercicio")
+                    b.HasOne("ProjetoBackend.Dominio.Entidade.Exercicio", "Exercicio")
                         .WithMany("TreinoExercicios")
                         .HasForeignKey("ExercicioId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("ProjetoBackend.Dominio.Treino", "Treino")
+                    b.HasOne("ProjetoBackend.Dominio.Entidade.Treino", "Treino")
                         .WithMany("TreinoExercicios")
                         .HasForeignKey("TreinoId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -299,17 +302,17 @@ namespace ProjetoBackend.Repositorio.Migrations
                     b.Navigation("Treino");
                 });
 
-            modelBuilder.Entity("ProjetoBackend.Dominio.Exercicio", b =>
+            modelBuilder.Entity("ProjetoBackend.Dominio.Entidade.Exercicio", b =>
                 {
                     b.Navigation("TreinoExercicios");
                 });
 
-            modelBuilder.Entity("ProjetoBackend.Dominio.Treino", b =>
+            modelBuilder.Entity("ProjetoBackend.Dominio.Entidade.Treino", b =>
                 {
                     b.Navigation("TreinoExercicios");
                 });
 
-            modelBuilder.Entity("ProjetoBackend.Dominio.Usuario", b =>
+            modelBuilder.Entity("ProjetoBackend.Dominio.Entidade.Usuario", b =>
                 {
                     b.Navigation("Evolucoes");
 
