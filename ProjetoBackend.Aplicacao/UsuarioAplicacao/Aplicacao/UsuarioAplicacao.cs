@@ -79,9 +79,9 @@ namespace ProjetoBackend.Aplicacao.Usuarios.Aplicacao
         {
             if (usuarioId <= 0)
             {
+                throw new ArgumentException("ID inválido.");
 
             }
-                throw new ArgumentException("ID inválido.");
 
             return await _usuarioRepositorio.ObterUsuarioDetalhes(usuarioId);
         }

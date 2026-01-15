@@ -61,5 +61,14 @@ namespace ProjetoBackend.Repositorio
                 new { TreinoId = treinoId }
             );
         }
+        public async Task<TreinoExercicio?> ObterPorID (int TreinoExercicioId)
+        {
+            return await _connection.QueryFirstOrDefaultAsync<TreinoExercicio>(
+                "spTreinoExercicioObter",
+                new { TreinoExercicioId = TreinoExercicioId },
+                commandType: CommandType.StoredProcedure
+            );
+        }
+
     }
 }

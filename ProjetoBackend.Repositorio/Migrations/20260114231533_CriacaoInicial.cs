@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace ProjetoBackend.Repositorio.Migrations
 {
     /// <inheritdoc />
-    public partial class CriacaoMiggrations : Migration
+    public partial class CriacaoInicial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -37,7 +37,7 @@ namespace ProjetoBackend.Repositorio.Migrations
                     SenhaHash = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     DataNascimento = table.Column<DateTime>(type: "datetime2", nullable: false),
                     AlturaCm = table.Column<decimal>(type: "decimal(5,2)", nullable: false),
-                    DataCriacao = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    DataCriacao = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "SYSUTCDATETIME()")
                 },
                 constraints: table =>
                 {
@@ -74,7 +74,7 @@ namespace ProjetoBackend.Repositorio.Migrations
                 {
                     IAInteracaoId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Pergunta = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Pergunta = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
                     Resposta = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     DataHora = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UsuarioId = table.Column<int>(type: "int", nullable: false)

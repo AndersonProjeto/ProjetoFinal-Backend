@@ -16,7 +16,7 @@ namespace ProjetoBackend.Repositorio.Configuracoes
             builder.Property(u => u.SenhaHash).HasColumnName("SenhaHash").IsRequired();
             builder.Property(u => u.DataNascimento).HasColumnName("DataNascimento").IsRequired();
             builder.Property(u => u.AlturaCm).HasColumnName("AlturaCm").HasColumnType("decimal(5,2)").IsRequired();
-            builder.Property(u => u.DataCriacao).HasColumnName("DataCriacao").IsRequired();
+            builder.Property(u => u.DataCriacao).HasColumnName("DataCriacao").HasDefaultValueSql("SYSUTCDATETIME()").IsRequired();
 
             builder.HasIndex(u => u.Email).IsUnique();
         }

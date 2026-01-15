@@ -1,4 +1,5 @@
 ﻿using ProjetoBackend.Aplicacao.DTOs.Usuario;
+using ProjetoBackend.Dominio.DTOs.Usuario;
 using ProjetoBackend.Dominio.Entidade;
 using System;
 using System.Collections.Generic;

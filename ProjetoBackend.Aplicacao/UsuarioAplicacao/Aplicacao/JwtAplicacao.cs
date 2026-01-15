@@ -1,15 +1,14 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using ProjetoBackend.Dominio.Entidades;
-using System;
-using System.Collections.Generic;
+using ProjetoBackend.Aplicacao.Login.Interface;
+using ProjetoBackend.Dominio.Entidade;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
 namespace ProjetoBackend.Aplicacao.Usuarios.Aplicacao
 {
-    public class JwtAplicacao
+    public class JwtAplicacao : IJwtAplicacao
     {
         private readonly IConfiguration _configuration;
         public JwtAplicacao(IConfiguration configuration)

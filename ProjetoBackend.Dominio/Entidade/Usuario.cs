@@ -32,11 +32,11 @@ namespace ProjetoBackend.Dominio.Entidade
 
             SenhaHash = senhaHash;
             DataNascimento = dataNascimento;
-            DataCriacao = DateTime.UtcNow;
 
             Treinos = new List<Treino>();
             Evolucoes = new List<Evolucao>();
             IAInteracoes = new List<IAInteracao>();
+
         }
 
         public void AtualizarNome(string nome)
