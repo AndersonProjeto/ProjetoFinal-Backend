@@ -3,6 +3,7 @@ using ProjetoBackend.Dominio.Entidade;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace ProjetoBackend.Repositorio.Interfaces
 {
@@ -12,5 +13,6 @@ namespace ProjetoBackend.Repositorio.Interfaces
         Task AtualizarTreinoExercicio(TreinoExercicio treinoExercicio);
         Task DeletarTreinoExercicio(int treinoExercicioId);
         Task<IEnumerable<TreinoExercicioDTO>> ListarTreino(int treinoId);
+        Task<TreinoExercicio?> ObterPorID(int TreinoExercicioId);
     }
 }

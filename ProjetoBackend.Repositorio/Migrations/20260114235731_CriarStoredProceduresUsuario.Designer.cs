@@ -12,8 +12,8 @@ using ProjetoBackend.Repositorio.Contexto;
 namespace ProjetoBackend.Repositorio.Migrations
 {
     [DbContext(typeof(ProjetoContexto))]
-    [Migration("20260114130452_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20260114235731_CriarStoredProceduresUsuario")]
+    partial class CriarStoredProceduresUsuario
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

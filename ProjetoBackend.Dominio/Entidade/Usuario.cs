@@ -36,6 +36,7 @@ namespace ProjetoBackend.Dominio.Entidade
             Treinos = new List<Treino>();
             Evolucoes = new List<Evolucao>();
             IAInteracoes = new List<IAInteracao>();
+
         }
 
         public void AtualizarNome(string nome)

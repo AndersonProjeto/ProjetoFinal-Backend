@@ -39,6 +39,18 @@
             Repeticoes = repeticoes;
             DescansoSegundos = descansoSegundos;
         }
+        public void AtualizarDados(int series, int repeticoes, int descansoSegundos)
+        {
+            if (series <= 0)
+                throw new ArgumentException("Séries inválidas");
+            if (repeticoes <= 0)
+                throw new ArgumentException("Repetições inválidas");
+            if (descansoSegundos < 0)
+                throw new ArgumentException("Descanso inválido");
+            Series = series;
+            Repeticoes = repeticoes;
+            DescansoSegundos = descansoSegundos;
+        }
 
 
     }

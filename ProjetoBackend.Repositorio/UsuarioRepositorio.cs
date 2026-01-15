@@ -1,5 +1,6 @@
 ﻿using Dapper;
 using ProjetoBackend.Aplicacao.DTOs.Usuario;
+using ProjetoBackend.Dominio.DTOs.Usuario;
 using ProjetoBackend.Dominio.Entidade;
 using ProjetoBackend.Repositorio.Contexto;
 using ProjetoBackend.Repositorio.Interfaces;
@@ -56,7 +57,7 @@ namespace ProjetoBackend.Repositorio
                 commandType: CommandType.StoredProcedure
             );
         }
-
+      
         public async Task<Usuario?> ObterPorID(int usuarioId)
         {
             return await _connection.QuerySingleOrDefaultAsync<Usuario>(
