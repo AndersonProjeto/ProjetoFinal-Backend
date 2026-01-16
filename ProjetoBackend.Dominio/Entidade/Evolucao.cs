@@ -18,8 +18,7 @@
 
         public Evolucao(int usuarioId,decimal pesoKg,decimal? cinturaCm,decimal? bracoCm,decimal? coxaCm)
         {
-            if (pesoKg <= 0)
-                throw new ArgumentException("Peso tem que ser maior que zero");
+            ValidarPeso(pesoKg);
 
             UsuarioId = usuarioId;
             PesoKg = pesoKg;
@@ -27,6 +26,21 @@
             BracoCm = bracoCm;
             CoxaCm = coxaCm;
             DataRegistro = DateTime.UtcNow;
+        }
+        public void Atualizar( decimal pesoKg,decimal? cinturaCm,decimal? bracoCm, decimal? coxaCm)
+        {
+            ValidarPeso(pesoKg);
+
+            PesoKg = pesoKg;
+            CinturaCm = cinturaCm;
+            BracoCm = bracoCm;
+            CoxaCm = coxaCm;
+        }
+
+        private static void ValidarPeso(decimal pesoKg)
+        {
+            if (pesoKg <= 0)
+                throw new ArgumentException("Peso tem que ser maior que zero");
         }
     }
 }

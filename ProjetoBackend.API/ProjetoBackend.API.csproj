@@ -20,6 +20,7 @@
     <ProjectReference Include="..\ProjetoBackend.Aplicacao\ProjetoBackend.Aplicacao.csproj" />
     <ProjectReference Include="..\ProjetoBackend.Dominio\ProjetoBackend.Dominio.csproj" />
     <ProjectReference Include="..\ProjetoBackend.Repositorio\ProjetoBackend.Repositorio.csproj" />
+    <ProjectReference Include="..\ProjetoBackend.Services\ProjetoBackend.Services.csproj" />
   </ItemGroup>
 
   <ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>

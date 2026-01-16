@@ -4,7 +4,7 @@ SELECT
     e.Nome,
     e.GrupoMuscular,
     e.Equipamento,
-
+    e.Descricao,
     COUNT(DISTINCT te.TreinoId) AS TotalTreinos,
     COUNT(te.TreinoExercicioId) AS TotalSeries,
     ISNULL(SUM(te.Repeticoes), 0) AS TotalRepeticoes
@@ -14,4 +14,5 @@ GROUP BY
     e.ExercicioId,
     e.Nome,
     e.GrupoMuscular,
-    e.Equipamento;
+    e.Equipamento,
+    e.Descricao;

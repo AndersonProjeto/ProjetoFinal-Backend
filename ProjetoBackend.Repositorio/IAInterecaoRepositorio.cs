@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using Microsoft.Extensions.Configuration;
 using ProjetoBackend.Dominio.Entidade;
 using ProjetoBackend.Repositorio.Contexto;
 using ProjetoBackend.Repositorio.Interfaces;
@@ -8,8 +9,8 @@ namespace ProjetoBackend.Repositorio
 {
     public class IAInterecaoRepositorio : BaseRepositorio, IIAInteracaoRepositorio
     {
-        public IAInterecaoRepositorio(ProjetoContexto contexto)
-            : base(contexto)
+        public IAInterecaoRepositorio(IConfiguration configuration)
+            : base(configuration)
         {
         }
         public async Task<int> AdicionarIAInteracao(IAInteracao interacao)

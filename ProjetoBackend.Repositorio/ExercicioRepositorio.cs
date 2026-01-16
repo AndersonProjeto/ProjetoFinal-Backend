@@ -1,8 +1,8 @@
 ﻿using Dapper;
+using Microsoft.Extensions.Configuration;
 using ProjetoBackend.Aplicacao.DTOs.Exercicio;
 using ProjetoBackend.Dominio.DTOs.Exercicio;
 using ProjetoBackend.Dominio.Entidade;
-using ProjetoBackend.Repositorio.Contexto;
 using ProjetoBackend.Repositorio.Interfaces;
 using System.Data;
 
@@ -10,7 +10,7 @@ namespace ProjetoBackend.Repositorio
 {
     public class ExercicioRepositorio : BaseRepositorio, IExercicioRepositorio
     {
-        public ExercicioRepositorio(ProjetoContexto contexto) : base(contexto)
+        public ExercicioRepositorio(IConfiguration configurationcontexto) : base(configurationcontexto)
         {
         }
         public async Task<int> AdicionarExercicio(Exercicio exercicio)
@@ -21,7 +21,8 @@ namespace ProjetoBackend.Repositorio
                 {
                     exercicio.Nome,
                     exercicio.GrupoMuscular,
-                    exercicio.Equipamento
+                    exercicio.Equipamento,
+                    exercicio.Descricao
 
                 },
                 commandType: CommandType.StoredProcedure
@@ -81,19 +82,19 @@ namespace ProjetoBackend.Repositorio
 
         public async Task<IEnumerable<Exercicio>> ObterTodosExercicios()
         {
-           return await _connection.QueryAsync<Exercicio>(
-               "spExercicioListar",
-                commandType: CommandType.StoredProcedure
-                );
+            return await _connection.QueryAsync<Exercicio>(
+                "spExercicioListar",
+                 commandType: CommandType.StoredProcedure
+                 );
         }
 
         public async Task<ExercicioResumoDto?> TotalTreinosPorExercicio(int exercicioId)
         {
             return await _connection.QuerySingleOrDefaultAsync<ExercicioResumoDto>(
-                "SELECT * FROM vwExercicioResumo", new
-                {
-                    ExercicioId = exercicioId
-                });
+     "SELECT * FROM vwExercicioResumo WHERE ExercicioId = @ExercicioId",
+     new { ExercicioId = exercicioId }
+ );
+
         }
         public async Task<ExercicioDetalhadoDto?> ObterExercicioDetalhado(int exercicioId)
         {

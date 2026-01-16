@@ -33,18 +33,16 @@ namespace ProjetoBackend.Aplicacao.Exercicio.Aplicacao
             if (exercicioExistente == null)
                 throw new Exception("Exercício não encontrado.");
 
-            // Importante: Manter o ID no objeto de domínio para o Update funcionar
-            var exercicioParaAtualizar = new Dominio.Entidade.Exercicio(
+            exercicioExistente.Atualizar(
                 dto.Nome,
                 dto.GrupoMuscular,
-                dto.Equipamento
+                dto.Equipamento,
+                dto.Descricao
                 );
 
 
 
-
-
-            await _exercicioRepositorio.AtualizarExercicio(exercicioParaAtualizar);
+            await _exercicioRepositorio.AtualizarExercicio(exercicioExistente);
         }
 
         public async Task DeletarExercicio(int exercicioId)

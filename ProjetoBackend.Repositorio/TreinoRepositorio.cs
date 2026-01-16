@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using Microsoft.Extensions.Configuration;
 using ProjetoBackend.Aplicacao.DTOs.Treino;
 using ProjetoBackend.Dominio.Entidade;
 using ProjetoBackend.Repositorio.Contexto;
@@ -9,7 +10,7 @@ namespace ProjetoBackend.Repositorio
 {
     public class TreinoRepositorio :BaseRepositorio, ITreinoRepositorio
     {
-        public TreinoRepositorio(ProjetoContexto contexto) : base(contexto)
+        public TreinoRepositorio(IConfiguration configuration) : base(configuration)
         {
         }
 

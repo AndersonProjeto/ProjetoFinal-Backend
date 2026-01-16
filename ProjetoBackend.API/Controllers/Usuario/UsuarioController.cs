@@ -49,13 +49,13 @@ namespace ProjetoBackend.API.Controllers.Usuario
             }
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{usuarioId}")]
         [Authorize]
-        public async Task<IActionResult> ObterPorId(int id)
+        public async Task<IActionResult> ObterPorId(int usuarioId)
         {
             try
             {
-                var usuario = await _usuarioAplicacao.ObterId(id);
+                var usuario = await _usuarioAplicacao.ObterId(usuarioId);
                 if (usuario == null) return NotFound();
 
                 return Ok(usuario);
@@ -67,7 +67,7 @@ namespace ProjetoBackend.API.Controllers.Usuario
         }
 
         [HttpPut]
-         [Authorize]
+        [Authorize]
         public async Task<IActionResult> Atualizar([FromBody] AtualizarUsuarioDTO dto)
         {
             try

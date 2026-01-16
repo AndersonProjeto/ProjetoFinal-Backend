@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using Microsoft.Extensions.Configuration;
 using ProjetoBackend.Aplicacao.DTOs.Usuario;
 using ProjetoBackend.Dominio.DTOs.Usuario;
 using ProjetoBackend.Dominio.Entidade;
@@ -10,7 +11,7 @@ namespace ProjetoBackend.Repositorio
 {
     public class UsuarioRepositorio : BaseRepositorio, IUsuarioRepositorio
     {
-        public UsuarioRepositorio(ProjetoContexto contexto) : base(contexto)
+        public UsuarioRepositorio(IConfiguration configuration) : base(configuration)
         {
 
         }

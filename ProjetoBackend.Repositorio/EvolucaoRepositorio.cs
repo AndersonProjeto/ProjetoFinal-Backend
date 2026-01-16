@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using Microsoft.Extensions.Configuration;
 using ProjetoBackend.Aplicacao.DTOs.Evolucao;
 using ProjetoBackend.Dominio.Entidade;
 using ProjetoBackend.Repositorio.Contexto;
@@ -9,7 +10,7 @@ namespace ProjetoBackend.Repositorio
 {
     public class EvolucaoRepositorio : BaseRepositorio, IEvolucaoRepositorio
     {
-        public EvolucaoRepositorio(ProjetoContexto contexto) : base(contexto)
+        public EvolucaoRepositorio(IConfiguration configuration) : base(configuration)
         {
         }
         public async Task<int> AdicionarEvolucao(Evolucao evolucao)
@@ -36,7 +37,14 @@ namespace ProjetoBackend.Repositorio
             },
             commandType: CommandType.StoredProcedure);
         }
-
+        public async Task<Evolucao?> ObterPorId(int evolucaoId)
+        {
+            return await _connection.QuerySingleOrDefaultAsync<Evolucao>(
+                "spEvolucaoObter",
+                new { EvolucaoId = evolucaoId },
+                commandType: CommandType.StoredProcedure
+            );
+        }
 
         public async Task<Evolucao?> ObterUltimaEvolucao(int usuarioId)
         {
