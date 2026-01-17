@@ -30,7 +30,7 @@ namespace ProjetoBackend.Repositorio
         public async Task<IEnumerable<IAInteracao>> ListarIAInteracoesPorUsuario(int usuarioId)
         {
             return await _connection.QueryAsync<IAInteracao>(
-                "spIAInteracaoListarPorUsario",
+                "spIAInteracaoListarPorUsuario",
                 new
                 {
                     UsuarioId = usuarioId

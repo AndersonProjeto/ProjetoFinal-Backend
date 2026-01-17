@@ -61,5 +61,15 @@ namespace ProjetoBackend.Aplicacao.TreinoExercicioAplicacao.Aplicacao
 
             return await _treinoExercicioRepositorio.ListarTreino(treinoId);
         }
+
+        public async Task<TreinoExercicio?> ObterPorID(int TreinoExercicioId)
+        {
+            var treinoExercicio = _treinoExercicioRepositorio.ObterPorID(TreinoExercicioId);
+            if (treinoExercicio == null)
+            {
+                throw new Exception("treinoExercicio não encontrado.");
+            }
+            return await _treinoExercicioRepositorio.ObterPorID(TreinoExercicioId);
+        }
     }
 }

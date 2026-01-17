@@ -8,7 +8,7 @@ using System.Data;
 
 namespace ProjetoBackend.Repositorio
 {
-    public class TreinoRepositorio :BaseRepositorio, ITreinoRepositorio
+    public class TreinoRepositorio : BaseRepositorio, ITreinoRepositorio
     {
         public TreinoRepositorio(IConfiguration configuration) : base(configuration)
         {
@@ -61,16 +61,17 @@ namespace ProjetoBackend.Repositorio
         public async Task<IEnumerable<TreinoPorUsuarioDTO>> ListarPorUsuario(int usuarioId)
         {
             return await _connection.QueryAsync<TreinoPorUsuarioDTO>(
-                "vwTreinosPorUsuario",
-                new { UsuarioId = usuarioId }
-            );
+    "SELECT * FROM vwTreinosPorUsuario WHERE UsuarioId = @UsuarioId",
+    new { UsuarioId = usuarioId }
+);
+
         }
 
         public async Task<IEnumerable<TreinoResumoDTO>> ObterResumoTreinos()
         {
             return await _connection.QueryAsync<TreinoResumoDTO>(
-                "vwTreinoResumo"
-            );
+     "SELECT * FROM vwTreinoResumo"
+ );
         }
 
         public async Task<int> TotalExerciciosDoTreino(int treinoId)

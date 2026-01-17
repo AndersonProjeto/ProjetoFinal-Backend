@@ -2,16 +2,25 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using ProjetoBackend.Aplicacao.EvolucaoAplicacao.Aplicacao;
+using ProjetoBackend.Aplicacao.EvolucaoAplicacao.Interface;
 using ProjetoBackend.Aplicacao.Exercicio.Aplicacao;
 using ProjetoBackend.Aplicacao.Exercicio.Interface;
+using ProjetoBackend.Aplicacao.IAInteracoes.Aplicacao;
+using ProjetoBackend.Aplicacao.IAInteracoes.Interfaces;
 using ProjetoBackend.Aplicacao.Login;
 using ProjetoBackend.Aplicacao.Login.Interface;
 using ProjetoBackend.Aplicacao.Seguranca;
+using ProjetoBackend.Aplicacao.Treino.Aplicacao;
+using ProjetoBackend.Aplicacao.TreinoAplicacao.Interface;
+using ProjetoBackend.Aplicacao.TreinoExercicioAplicacao.Aplicacao;
+using ProjetoBackend.Aplicacao.TreinoExercicioAplicacao.Interface;
 using ProjetoBackend.Aplicacao.Usuarios.Aplicacao;
 using ProjetoBackend.Aplicacao.Usuarios.Interfaces;
 using ProjetoBackend.Repositorio;
 using ProjetoBackend.Repositorio.Contexto;
 using ProjetoBackend.Repositorio.Interfaces;
+using ProjetoBackend.Services.IAServices;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -26,6 +35,18 @@ builder.Services.AddScoped<IUsuarioAplicacao, UsuarioAplicacao>();
 builder.Services.AddScoped<IExercicioRepositorio, ExercicioRepositorio>();
 builder.Services.AddScoped<IExercicioAplicacao, ExercicioAplicacao>();
 
+builder.Services.AddScoped<IEvolucaoRepositorio, EvolucaoRepositorio>();
+builder.Services.AddScoped<IEvolucaoAplicacao, EvolucaoAplicacao>();
+
+builder.Services.AddScoped<ITreinoExercicioRepositorio, TreinoExercicioRepositorio>();
+builder.Services.AddScoped<ITreinoExercicioAplicacao, TreinoExercicioAplicacao>();
+
+builder.Services.AddScoped<ITreinoRepositorio, TreinoRepositorio>();
+builder.Services.AddScoped<ITreinoAplicacao, TreinoAplicacao>();
+builder.Services.AddScoped<IAService, AiService>();
+
+builder.Services.AddScoped<IIAInteracaoRepositorio, IAInterecaoRepositorio>();
+builder.Services.AddScoped<IIAInteracaoAplicacao, IAInteracaoAplicacao>();
 
 builder.Services.AddScoped<ISenhahashAplicacao, SenhaHashAplicacao>();
 builder.Services.AddScoped<IJwtAplicacao, JwtAplicacao>();

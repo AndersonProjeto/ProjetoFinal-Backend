@@ -30,21 +30,19 @@ namespace ProjetoBackend.Aplicacao.EvolucaoAplicacao.Aplicacao
 
         public async Task AtualizarEvolucao(AtualizarEvolucaoDTO atualizarEvolucaoDTO)
         {
-            var evolucaoExistente = await _evolucaoRepositorio.ObterPorId(atualizarEvolucaoDTO.UsuarioId);
+            var evolucaoExistente = await _evolucaoRepositorio.ObterPorId(atualizarEvolucaoDTO.EvolucaoId);
 
             if (evolucaoExistente == null)
                 throw new Exception("Evolução não encontrada.");
 
-            var evolucaoAtualizada = new Evolucao(
-                atualizarEvolucaoDTO.UsuarioId,
+            evolucaoExistente.Atualizar(
                 atualizarEvolucaoDTO.PesoKg,
                 atualizarEvolucaoDTO.CinturaCm,
                 atualizarEvolucaoDTO.BracoCm,
                 atualizarEvolucaoDTO.CoxaCm
             );
 
-  
-            await _evolucaoRepositorio.AtualizarEvolucao(evolucaoAtualizada);
+            await _evolucaoRepositorio.AtualizarEvolucao(evolucaoExistente);
         }
 
         public async Task<Evolucao?> ObterUltimaEvolucao(int usuarioId)

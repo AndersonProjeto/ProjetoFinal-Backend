@@ -13,6 +13,8 @@ namespace ProjetoBackend.Aplicacao.TreinoExercicioAplicacao.Interface
         Task AtualizarTreinoExercicio(AtualizarTreinoExercicioDTO dto);
         Task DeletarTreinoExercicio(int treinoExercicioId);
         Task<IEnumerable<TreinoExercicioDTO>> ListarTreino(int treinoId);
+        Task<TreinoExercicio?> ObterPorID(int TreinoExercicioId);
+
 
     }
 }

@@ -2,12 +2,12 @@
 {
     public class IAInteracao
     {
-        public int IAInteracaoId { get; private set; }
-        public string Pergunta { get; private set; }
-        public string Resposta { get; private set; }
-        public DateTime DataHora { get; private set; }
-        public Usuario Usuario { get; private set; }
-        public int UsuarioId { get; private set; }
+        public int IAInteracaoId { get;  set; }
+        public string Pergunta { get;  set; } = string.Empty;
+        public string Resposta { get;  set; } = string.Empty;
+        public DateTime DataHora { get;  set; }
+        public Usuario? Usuario { get;  set; }
+        public int UsuarioId { get;  set; }
 
         protected IAInteracao() { }
 

@@ -1,4 +1,7 @@
 <Solution>
+  <Folder Name="/Itens de Solução/">
+    <File Path=".gitignore" />
+  </Folder>
   <Project Path="../ProjetoBackend.Aplicacao/ProjetoBackend.Aplicacao.csproj" Id="0ac0c512-2db6-4140-8a6f-30253aeda7b6" />
   <Project Path="../ProjetoBackend.Dominio/ProjetoBackend.Dominio.csproj" Id="d58685d8-40ec-4dee-8a69-2679fed93b7c" />
   <Project Path="../ProjetoBackend.Repositorio/ProjetoBackend.Repositorio.csproj" Id="738ddec5-5345-4e5f-875a-f637b3b52a7e" />

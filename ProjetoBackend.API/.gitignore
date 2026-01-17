@@ -1,0 +1,54 @@
+# Visual Studio
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Build
+bin/
+obj/
+
+# Rider
+.idea/
+
+# ASP.NET
+appsettings.json
+appsettings.Development.json
+
+# Logs
+*.log
+logs/
+
+# Pacotes
+*.nupkg
+*.snupkg
+
+# Arquivos gerados
+*.dbmdl
+*.bak
+*.sql
+
+# Resposta de ferramentas
+*.vsconfig
+*.vscode/
+
+# Azure
+azure-pipelines.yml
+
+# EF Migrations (opcional, mas recomendado se quiser ignorar o banco local)
+*.db
+*.mdf
+*.ldf
+
+# Node (se tiver front-end)
+node_modules/
+
+# Mac
+.DS_Store
+
+# Linux
+*~
+
+# Windows
+Thumbs.db

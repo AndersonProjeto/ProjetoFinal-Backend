@@ -1,0 +1,83 @@
+﻿using Microsoft.AspNetCore.Mvc;
+using ProjetoBackend.Aplicacao.EvolucaoAplicacao.Interface;
+using ProjetoBackend.Dominio.DTOs.Evolucao;
+
+namespace ProjetoBackend.API.Controllers.Evolucao
+{
+    [ApiController]
+    [Route("api/[controller]")]
+    public class EvolucaoController : ControllerBase
+    {
+        private readonly IEvolucaoAplicacao _evolucaoAplicacao;
+
+        public EvolucaoController(IEvolucaoAplicacao evolucaoAplicacao)
+        {
+            _evolucaoAplicacao = evolucaoAplicacao;
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Adicionar([FromBody] AdicionarEvolucaoDTO dto)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var evolucaoId = await _evolucaoAplicacao.AdicionarEvolucao(dto);
+
+            return CreatedAtAction(
+                nameof(ObterUltimaEvolucao),
+                new { usuarioId = dto.UsuarioId },
+                evolucaoId
+            );
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> Atualizar([FromBody] AtualizarEvolucaoDTO dto)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            await _evolucaoAplicacao.AtualizarEvolucao(dto);
+
+            return NoContent();
+        }
+
+        [HttpGet("usuario/{usuarioId}/ultima")]
+        public async Task<IActionResult> ObterUltimaEvolucao(int usuarioId)
+        {
+            var evolucao = await _evolucaoAplicacao.ObterUltimaEvolucao(usuarioId);
+
+            if (evolucao == null)
+                return NotFound();
+
+            return Ok(evolucao);
+        }
+
+        [HttpGet("usuario/{usuarioId}/resumo")]
+        public async Task<IActionResult> ResumoEvolucao(int usuarioId)
+        {
+            var resumo = await _evolucaoAplicacao.ResumoEvolucao(usuarioId);
+            return Ok(resumo);
+        }
+
+        [HttpGet("usuario/{usuarioId}/historico")]
+        public async Task<IActionResult> HistoricoDeEvolucao(int usuarioId)
+        {
+            var historico = await _evolucaoAplicacao.HistoricoDeEvolucaoDoUsuario(usuarioId);
+            return Ok(historico);
+        }
+
+        [HttpGet("usuario/{usuarioId}/peso-inicial")]
+        public async Task<IActionResult> ObterPesoInicial(int usuarioId)
+        {
+            var pesoInicial = await _evolucaoAplicacao.ObterPesoInicial(usuarioId);
+            return Ok(pesoInicial);
+        }
+
+        [HttpGet("usuario/{usuarioId}/diferenca-peso")]
+        public async Task<IActionResult> ObterDiferencaPeso(int usuarioId)
+        {
+            var diferenca = await _evolucaoAplicacao.ObterDiferencaPeso(usuarioId);
+            return Ok(diferenca);
+        }
+    }
+}

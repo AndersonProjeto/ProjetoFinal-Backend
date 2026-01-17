@@ -7,6 +7,6 @@ CREATE PROCEDURE spEvolucaoCriar
 	AS
 	BEGIN
 	INSERT INTO Evolucoes (UsuarioId, Pesokg, CinturaCm, BracoCm, CoxaCm,DataRegistro)
-		VALUES (@UsuarioId, @Pesokg, @CinturaCm, @BracoCm, @CoxaCm,GETUTDATE())
+		VALUES (@UsuarioId, @Pesokg, @CinturaCm, @BracoCm, @CoxaCm,GETUTCDATE())
 		SELECT SCOPE_IDENTITY() AS EvolucaoId;
 	END
