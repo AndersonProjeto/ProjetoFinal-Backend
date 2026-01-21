@@ -1,6 +1,6 @@
 CREATE PROCEDURE spExercicioPorGrupoMuscular
 (
-@GrupoMuscular NVARCHAR(80)
+@GrupoMuscular INT
 )
 AS
 BEGIN
@@ -8,7 +8,8 @@ BEGIN
 		ExercicioId,
 		Nome,
 		GrupoMuscular,
-		Equipamento
+		Equipamento,
+		descricao
 	FROM Exercicios
 	WHERE GrupoMuscular = @GrupoMuscular
 	ORDER BY Nome;

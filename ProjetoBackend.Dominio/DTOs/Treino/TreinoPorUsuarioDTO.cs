@@ -8,6 +8,6 @@ namespace ProjetoBackend.Aplicacao.DTOs.Treino
     {
         public  int TreinoId { get; set; }
         public string NomeTreino { get; set; }
-        public DateTime DataCricao { get; set; }
+        public DateTime DataCriacao { get; set; }
     }
 }

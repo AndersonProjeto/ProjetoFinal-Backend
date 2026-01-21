@@ -18,6 +18,7 @@ namespace ProjetoBackend.Repositorio.Interfaces
         Task<UsuarioResumoDto?> ObterUsuarioResumo(int usuarioId);
         Task<UsuarioUltimaEvolucaoDto?> ObterUltimaEvolucao(int usuarioId);
         Task<UsuarioDetalhesDTO?> ObterUsuarioDetalhes(int usuarioId);
+        Task AtualizarSenha(int usuarioId, string senhaHash);
 
 
     }

@@ -7,7 +7,7 @@ BEGIN
     SET NOCOUNT ON;
 
     INSERT INTO IAInteracoes (UsuarioId, Pergunta, Resposta, DataHora)
-    VALUES (@UsuarioId, @Pergunta, @Resposta, GETUTCDATE());
+    VALUES (@UsuarioId, @Pergunta, @Resposta, GETDATE());
 
     SELECT CAST(SCOPE_IDENTITY() AS INT);
 END

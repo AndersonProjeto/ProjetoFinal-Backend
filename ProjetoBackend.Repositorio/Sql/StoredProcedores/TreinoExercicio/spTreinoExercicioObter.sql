@@ -1,13 +1,14 @@
 CREATE PROCEDURE spTreinoExercicioObter
-	@TreinoExercicioId INT
-	AS
-	BEGIN
-	SELECT TreinoExercicioId,
+    @TreinoExercicioId INT
+AS
+BEGIN
+    SELECT
+        TreinoExercicioId,
         TreinoId,
         ExercicioId,
         Series,
         Repeticoes,
         DescansoSegundos
-		FROM TreinosExercicios
-		WHERE TreinoExercicioId = @TreinoExercicioId;
-	END
+    FROM TreinoExercicios
+    WHERE TreinoExercicioId = @TreinoExercicioId;
+END

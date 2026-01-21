@@ -1,18 +1,24 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using ProjetoBackend.Aplicacao.Exercicio.Interface;
+using ProjetoBackend.Aplicacao.ExercicioAplicacao.Aplicacao;
 using ProjetoBackend.Dominio.DTOs.Exercicio;
+using ProjetoBackend.Dominio.Enum;
 
 namespace ProjetoBackend.API.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class ExercicioController : ControllerBase
     {
         private readonly IExercicioAplicacao _exercicioAplicacao;
+        private readonly ImportacaoExercicioAplicacao _importacaoExercicioAplicacao;
 
-        public ExercicioController(IExercicioAplicacao exercicioAplicacao)
+        public ExercicioController(IExercicioAplicacao exercicioAplicacao, ImportacaoExercicioAplicacao importacaoExercicioAplicacao)
         {
             _exercicioAplicacao = exercicioAplicacao;
+            _importacaoExercicioAplicacao = importacaoExercicioAplicacao;
         }
 
 
@@ -66,7 +72,7 @@ namespace ProjetoBackend.API.Controllers
 
         // GET: api/exercicio/grupo/{grupoMuscular}
         [HttpGet("grupo/{grupoMuscular}")]
-        public async Task<IActionResult> ListarPorGrupoMuscular(string grupoMuscular)
+        public async Task<IActionResult> ListarPorGrupoMuscular(EnumGrupoMuscular grupoMuscular)
         {
             var exercicios = await _exercicioAplicacao.ListarPorGrupoMuscular(grupoMuscular);
             return Ok(exercicios);
@@ -83,8 +89,15 @@ namespace ProjetoBackend.API.Controllers
 
             return Ok(detalhe);
         }
+        [HttpGet("paginado")]
+        public async Task<IActionResult> GetPaginado(int pagina = 1, int tamanhoPagina = 5)
+        {
+            var result = await _exercicioAplicacao.ObterExerciciosPaginados(pagina, tamanhoPagina);
+            return Ok(result);
+        }
 
-        // GET: api/exercicio/{exercicioId}/resumo
+
+        
         [HttpGet("{exercicioId:int}/resumo")]
         public async Task<IActionResult> TotalTreinos(int exercicioId)
         {
@@ -95,8 +108,14 @@ namespace ProjetoBackend.API.Controllers
 
             return Ok(resumo);
         }
-    }
+        [HttpPost("{exercicioId}/importar-imagem")]
+        public async Task<IActionResult> ImportarImagem(int exercicioId)
+        {
+            await _importacaoExercicioAplicacao.ImportarImagem(exercicioId);
+            return NoContent();
+        }
 
 
     }
+}
 

@@ -8,14 +8,18 @@ namespace ProjetoBackend.Repositorio
 {
     public abstract class BaseRepositorio
     {
-        protected readonly IDbConnection _connection;
+        private readonly string _connectionString;
 
         protected BaseRepositorio(IConfiguration configuration)
         {
-            _connection = new SqlConnection(
-                configuration.GetConnectionString("DefaultConnection")
-            );
+            _connectionString = configuration.GetConnectionString("DefaultConnection");
+        }
+
+        protected IDbConnection CriarConexao()
+        {
+            return new SqlConnection(_connectionString);
         }
     }
+
 
 }

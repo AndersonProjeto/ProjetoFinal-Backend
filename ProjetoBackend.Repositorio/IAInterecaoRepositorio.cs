@@ -13,9 +13,12 @@ namespace ProjetoBackend.Repositorio
             : base(configuration)
         {
         }
+
         public async Task<int> AdicionarIAInteracao(IAInteracao interacao)
         {
-            return await _connection.QuerySingleAsync<int>(
+            using var conn = CriarConexao();
+
+            return await conn.QuerySingleAsync<int>(
                 "spIAInteracaoCriar",
                 new
                 {
@@ -29,22 +32,26 @@ namespace ProjetoBackend.Repositorio
 
         public async Task<IEnumerable<IAInteracao>> ListarIAInteracoesPorUsuario(int usuarioId)
         {
-            return await _connection.QueryAsync<IAInteracao>(
+            using var conn = CriarConexao();
+
+            return await conn.QueryAsync<IAInteracao>(
                 "spIAInteracaoListarPorUsuario",
                 new
                 {
                     UsuarioId = usuarioId
                 },
-                commandType: CommandType.StoredProcedure);
-
+                commandType: CommandType.StoredProcedure
+            );
         }
 
         public async Task<IAInteracao?> ObterUltimaInteracao(int usuarioId)
         {
-            return await _connection.QuerySingleOrDefaultAsync<IAInteracao>(
+            using var conn = CriarConexao();
+
+            return await conn.QuerySingleOrDefaultAsync<IAInteracao>(
                 "spIAInteracaoObterUltima",
                 new
-                { 
+                {
                     UsuarioId = usuarioId
                 },
                 commandType: CommandType.StoredProcedure

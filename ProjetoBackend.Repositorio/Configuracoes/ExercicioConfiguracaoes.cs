@@ -13,6 +13,8 @@ namespace ProjetoBackend.Repositorio.Configuracoes
             builder.Property(e => e.Nome).HasColumnName("Nome").IsRequired().HasMaxLength(150); builder.Property(e => e.Descricao).HasColumnName("Descricao").HasMaxLength(1000).IsRequired(false);
             builder.Property(e => e.GrupoMuscular).HasColumnName("GrupoMuscular").IsRequired().HasMaxLength(80);
             builder.Property(e => e.Equipamento).HasColumnName("Equipamento").HasMaxLength(80);
+            builder.Property(e => e.Descricao).HasColumnName("Descricao").IsRequired(false);
+     
         }
     }
 }

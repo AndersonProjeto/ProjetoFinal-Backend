@@ -16,7 +16,9 @@ namespace ProjetoBackend.Repositorio
 
         public async Task<int> AdicionarTreino(Treino treino)
         {
-            return await _connection.QuerySingleAsync<int>(
+            using var conn = CriarConexao();
+
+            return await conn.QuerySingleAsync<int>(
                 "spTreinoCriar",
                 new
                 {
@@ -29,7 +31,9 @@ namespace ProjetoBackend.Repositorio
 
         public async Task AtualizarTreino(Treino treino)
         {
-            await _connection.ExecuteAsync(
+            using var conn = CriarConexao();
+
+            await conn.ExecuteAsync(
                 "spTreinoAtualizar",
                 new
                 {
@@ -42,7 +46,9 @@ namespace ProjetoBackend.Repositorio
 
         public async Task DeletarTreino(int treinoId)
         {
-            await _connection.ExecuteAsync(
+            using var conn = CriarConexao();
+
+            await conn.ExecuteAsync(
                 "spTreinoDeletar",
                 new { TreinoId = treinoId },
                 commandType: CommandType.StoredProcedure
@@ -51,7 +57,9 @@ namespace ProjetoBackend.Repositorio
 
         public async Task<Treino?> ObterPorId(int treinoId)
         {
-            return await _connection.QuerySingleOrDefaultAsync<Treino>(
+            using var conn = CriarConexao();
+
+            return await conn.QuerySingleOrDefaultAsync<Treino>(
                 "spTreinoObterPorID",
                 new { TreinoId = treinoId },
                 commandType: CommandType.StoredProcedure
@@ -60,23 +68,28 @@ namespace ProjetoBackend.Repositorio
 
         public async Task<IEnumerable<TreinoPorUsuarioDTO>> ListarPorUsuario(int usuarioId)
         {
-            return await _connection.QueryAsync<TreinoPorUsuarioDTO>(
-    "SELECT * FROM vwTreinosPorUsuario WHERE UsuarioId = @UsuarioId",
-    new { UsuarioId = usuarioId }
-);
+            using var conn = CriarConexao();
 
+            return await conn.QueryAsync<TreinoPorUsuarioDTO>(
+                "SELECT * FROM vwTreinosPorUsuario WHERE UsuarioId = @UsuarioId",
+                new { UsuarioId = usuarioId }
+            );
         }
 
         public async Task<IEnumerable<TreinoResumoDTO>> ObterResumoTreinos()
         {
-            return await _connection.QueryAsync<TreinoResumoDTO>(
-     "SELECT * FROM vwTreinoResumo"
- );
+            using var conn = CriarConexao();
+
+            return await conn.QueryAsync<TreinoResumoDTO>(
+                "SELECT * FROM vwTreinoResumo"
+            );
         }
 
         public async Task<int> TotalExerciciosDoTreino(int treinoId)
         {
-            return await _connection.ExecuteScalarAsync<int>(
+            using var conn = CriarConexao();
+
+            return await conn.ExecuteScalarAsync<int>(
                 "SELECT dbo.fnTreinoTotalExercicios(@TreinoId)",
                 new { TreinoId = treinoId }
             );
@@ -84,7 +97,9 @@ namespace ProjetoBackend.Repositorio
 
         public async Task<int> TotalTreinosDoUsuario(int usuarioId)
         {
-            return await _connection.ExecuteScalarAsync<int>(
+            using var conn = CriarConexao();
+
+            return await conn.ExecuteScalarAsync<int>(
                 "SELECT dbo.fnTreinoTotalUsuario(@UsuarioId)",
                 new { UsuarioId = usuarioId }
             );

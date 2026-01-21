@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using ProjetoBackend.Services.IAServices;
 
 namespace ProjetoBackend.API.Controllers.AIController
 {
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class AiController : ControllerBase

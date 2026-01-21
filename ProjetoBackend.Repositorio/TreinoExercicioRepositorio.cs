@@ -17,7 +17,9 @@ namespace ProjetoBackend.Repositorio
 
         public async Task<int> AdicionarTreinoExercicio(TreinoExercicio treinoExercicio)
         {
-            return await _connection.QuerySingleAsync<int>(
+            using var conn = CriarConexao();
+
+            return await conn.QuerySingleAsync<int>(
                 "spTreinoExercicioCriar",
                 new
                 {
@@ -33,7 +35,9 @@ namespace ProjetoBackend.Repositorio
 
         public async Task AtualizarTreinoExercicio(TreinoExercicio treinoExercicio)
         {
-            await _connection.ExecuteAsync(
+            using var conn = CriarConexao();
+
+            await conn.ExecuteAsync(
                 "spTreinoExercicioAtualizar",
                 new
                 {
@@ -48,7 +52,9 @@ namespace ProjetoBackend.Repositorio
 
         public async Task DeletarTreinoExercicio(int treinoExercicioId)
         {
-            await _connection.ExecuteAsync(
+            using var conn = CriarConexao();
+
+            await conn.ExecuteAsync(
                 "spTreinoExercicioDeletar",
                 new { TreinoExercicioId = treinoExercicioId },
                 commandType: CommandType.StoredProcedure
@@ -57,19 +63,23 @@ namespace ProjetoBackend.Repositorio
 
         public async Task<IEnumerable<TreinoExercicioDTO>> ListarTreino(int treinoId)
         {
-            return await _connection.QueryAsync<TreinoExercicioDTO>(
+            using var conn = CriarConexao();
+
+            return await conn.QueryAsync<TreinoExercicioDTO>(
                 "SELECT * FROM vwTreinoExerciciosDetalhe WHERE TreinoId = @TreinoId",
                 new { TreinoId = treinoId }
             );
         }
-        public async Task<TreinoExercicio?> ObterPorID (int TreinoExercicioId)
+
+        public async Task<TreinoExercicio?> ObterPorID(int TreinoExercicioId)
         {
-            return await _connection.QueryFirstOrDefaultAsync<TreinoExercicio>(
+            using var conn = CriarConexao();
+
+            return await conn.QueryFirstOrDefaultAsync<TreinoExercicio>(
                 "spTreinoExercicioObter",
                 new { TreinoExercicioId = TreinoExercicioId },
                 commandType: CommandType.StoredProcedure
             );
         }
-
     }
 }

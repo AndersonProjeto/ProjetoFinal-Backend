@@ -1,6 +1,7 @@
 ﻿using ProjetoBackend.Aplicacao.DTOs.Exercicio;
 using ProjetoBackend.Dominio.DTOs.Exercicio;
 using ProjetoBackend.Dominio.Entidade;
+using ProjetoBackend.Dominio.Enum;
 
 namespace ProjetoBackend.Repositorio.Interfaces
 {
@@ -11,8 +12,9 @@ namespace ProjetoBackend.Repositorio.Interfaces
         Task DeletarExercicio(int exercicioId);
         Task<Exercicio> ObterPorID(int exercicioId);
         Task<IEnumerable<Exercicio>> ObterTodosExercicios();
-        Task<IEnumerable<Exercicio>> ListarPorGrupoMuscular(string grupoMuscular);
+        Task<IEnumerable<Exercicio>> ListarPorGrupoMuscular(EnumGrupoMuscular grupoMuscular);
         Task<ExercicioResumoDto?> TotalTreinosPorExercicio(int exercicioId);
         Task<ExercicioDetalhadoDto?> ObterExercicioDetalhado(int exercicioId);
+        Task<PaginaResultado<Exercicio>> ObterExerciciosPaginados(int pagina, int tamanhoPagina);
     }
 }

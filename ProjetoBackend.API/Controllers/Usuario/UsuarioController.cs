@@ -20,7 +20,7 @@ namespace ProjetoBackend.API.Controllers.Usuario
             _usuarioAplicacao = usuarioAplicacao;
             _loginAplicacao = loginAplicacao;
         }
-
+        [AllowAnonymous]
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginDTO loginDto)
         {
@@ -34,14 +34,14 @@ namespace ProjetoBackend.API.Controllers.Usuario
                 return Unauthorized(new { mensagem = ex.Message });
             }
         }
-
+        [AllowAnonymous]
         [HttpPost("registrar")]
         public async Task<IActionResult> Adicionar([FromBody] AdicionarUsuarioDTO dto)
         {
             try
             {
                 var id = await _usuarioAplicacao.AdicionarUsuario(dto);
-                return CreatedAtAction(nameof(ObterPorId), new { id = id }, dto);
+                return CreatedAtAction(nameof(ObterPorId), new { usuarioId = id }, dto);
             }
             catch (Exception ex)
             {

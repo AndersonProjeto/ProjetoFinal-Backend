@@ -52,11 +52,9 @@ namespace ProjetoBackend.Services.IAServices
 
             var result = await response.Content.ReadAsStringAsync();
 
-            // --- NOVIDADE: Lógica para extrair apenas o texto ---
             var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
             var data = JsonSerializer.Deserialize<GitHubResponse>(result, options);
 
-            // Retorna apenas o conteúdo da primeira escolha (a resposta da IA)
             return data?.Choices?.FirstOrDefault()?.Message?.Content ?? "IA não retornou resposta.";
         }
     }

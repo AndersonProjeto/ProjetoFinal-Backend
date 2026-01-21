@@ -26,14 +26,14 @@ namespace ProjetoBackend.Aplicacao.Usuarios.Aplicacao
         {
             var senhaHash = _senhahashAplicacao.GerarHash(dto.Senha);
 
-           var usuario = new Usuario
-            (
-                nome: dto.Nome,
-                email: dto.Email,
-                senhaHash: senhaHash,
-                dataNascimento: dto.DataNascimento,
-                alturaCm: dto.AlturaCm
-            );
+            var usuario = new Usuario
+             (
+                 nome: dto.Nome,
+                 email: dto.Email,
+                 senhaHash: senhaHash,
+                 dataNascimento: dto.DataNascimento,
+                 alturaCm: dto.AlturaCm
+             );
 
             return await _usuarioRepositorio.AdicionarUsuario(usuario);
         }
@@ -59,11 +59,26 @@ namespace ProjetoBackend.Aplicacao.Usuarios.Aplicacao
             if (usuario == null)
                 throw new Exception("Usuário não encontrado.");
 
-            var novaSenhaHash = _senhahashAplicacao.GerarHash(dto.NovaSenha);
-            usuario.AtualizarSenha(novaSenhaHash);
+            if (string.IsNullOrWhiteSpace(usuario.SenhaHash))
+                throw new Exception("Usuário sem senha cadastrada.");
 
-            await _usuarioRepositorio.AtualizarUsuario(usuario);
+            var senhaValida = _senhahashAplicacao.VerificarHash(
+                dto.SenhaAtual,
+                usuario.SenhaHash
+            );
+
+            if (!senhaValida)
+                throw new Exception("Senha atual incorreta.");
+
+            var novaSenhaHash = _senhahashAplicacao.GerarHash(dto.NovaSenha);
+
+            await _usuarioRepositorio.AtualizarSenha(
+                usuario.UsuarioId,
+                novaSenhaHash
+            );
         }
+
+
 
         public async Task DeletarUsuario(int usuarioId)
         {

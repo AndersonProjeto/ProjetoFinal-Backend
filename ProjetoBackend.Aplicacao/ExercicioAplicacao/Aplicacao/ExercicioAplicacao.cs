@@ -1,6 +1,7 @@
 ﻿using ProjetoBackend.Aplicacao.DTOs.Exercicio;
 using ProjetoBackend.Aplicacao.Exercicio.Interface;
 using ProjetoBackend.Dominio.DTOs.Exercicio;
+using ProjetoBackend.Dominio.Enum;
 using ProjetoBackend.Repositorio.Interfaces;
 
 namespace ProjetoBackend.Aplicacao.Exercicio.Aplicacao
@@ -18,8 +19,9 @@ namespace ProjetoBackend.Aplicacao.Exercicio.Aplicacao
         {
             var exercicio = new Dominio.Entidade.Exercicio(
                 dto.Nome,
-                dto.GrupoMuscular,
-                dto.Equipamento
+                (EnumGrupoMuscular)dto.GrupoMuscular,
+                dto.Equipamento,
+                dto.Descricao
             );
 
             return await _exercicioRepositorio.AdicionarExercicio(exercicio);
@@ -35,9 +37,10 @@ namespace ProjetoBackend.Aplicacao.Exercicio.Aplicacao
 
             exercicioExistente.Atualizar(
                 dto.Nome,
-                dto.GrupoMuscular,
+               (EnumGrupoMuscular)dto.GrupoMuscular,
                 dto.Equipamento,
-                dto.Descricao
+                dto.Descricao,
+                dto.ImagemUrl
                 );
 
 
@@ -89,9 +92,15 @@ namespace ProjetoBackend.Aplicacao.Exercicio.Aplicacao
             return await _exercicioRepositorio.TotalTreinosPorExercicio(exercicioId);
         }
 
-        public async Task<IEnumerable<Dominio.Entidade.Exercicio>> ListarPorGrupoMuscular(string grupoMuscular)
+        public async Task<IEnumerable<Dominio.Entidade.Exercicio>> ListarPorGrupoMuscular(EnumGrupoMuscular grupoMuscular)
         {
             return await _exercicioRepositorio.ListarPorGrupoMuscular(grupoMuscular);
+        }
+
+        public async Task<PaginaResultado<Dominio.Entidade.Exercicio>> ObterExerciciosPaginados(int pagina, int tamanhoPagina)
+        {
+            return await _exercicioRepositorio.ObterExerciciosPaginados(pagina, tamanhoPagina);
+
         }
     }
 }

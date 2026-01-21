@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ProjetoBackend.Aplicacao.IAInteracoes.Interfaces;
 using ProjetoBackend.Dominio.DTOs;
@@ -7,6 +8,7 @@ using ProjetoBackend.Services.IAServices;
 
 namespace ProjetoBackend.API.Controllers.IAInteracao
 {
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class IAInteracaoController : ControllerBase

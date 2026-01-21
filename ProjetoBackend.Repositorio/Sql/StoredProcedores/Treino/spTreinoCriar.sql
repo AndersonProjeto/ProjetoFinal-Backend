@@ -4,7 +4,7 @@ CREATE PROCEDURE spTreinoCriar
 AS
 BEGIN
     INSERT INTO Treinos (UsuarioId, NomeTreino, DataCriacao)
-    VALUES (@UsuarioId, @NomeTreino, GETUTCDATE());
+    VALUES (@UsuarioId, @NomeTreino, GETDATE());
 
     SELECT SCOPE_IDENTITY() AS TreinoId;
 END

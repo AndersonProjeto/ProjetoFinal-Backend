@@ -1,10 +1,12 @@
-﻿namespace ProjetoBackend.Dominio.DTOs.Exercicio
+﻿using ProjetoBackend.Dominio.Enum;
+
+namespace ProjetoBackend.Dominio.DTOs.Exercicio
 {
     public class ExercicioDetalhadoDto
     {
         public int ExercicioId { get; set; }
         public string Nome { get; set; } = null!;
-        public string GrupoMuscular { get; set; } = null!;
+        public EnumGrupoMuscular GrupoMuscular { get; set; } 
         public string Equipamento { get; set; } = null!;
 
         public int TotalTreinos { get; set; }

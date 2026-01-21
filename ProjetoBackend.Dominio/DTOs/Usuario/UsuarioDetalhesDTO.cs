@@ -11,6 +11,6 @@ namespace ProjetoBackend.Aplicacao.DTOs.Usuario
         public string Email { get; set; }
         public DateTime DataNascimento { get; set; }
         public decimal AlturaCm { get; set; }
-        public DateTime DataCricao { get; set; }
+        public DateTime DataCriacao { get; set; }
     }
 }

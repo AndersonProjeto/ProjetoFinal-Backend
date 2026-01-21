@@ -1,15 +1,17 @@
 CREATE PROCEDURE spExercicioAtualizar
 	@ExercicioId INT,
 	@Nome NVARCHAR(150),
-	@GrupoMuscular NVARCHAR(80),
+	@GrupoMuscular INT ,
 	@Equipamento NVARCHAR(80),
-	@Descricao NVARCHAR(MAX)
+	@Descricao NVARCHAR(MAX),
+	@ImagemUrl NVARCHAR(MAX)
 	AS
 	BEGIN
 	UPDATE Exercicios
 		SET Nome = @Nome,
 			GrupoMuscular = @GrupoMuscular,
 			Equipamento = @Equipamento,
-			Descricao = @Descricao
+			Descricao = @Descricao,
+			ImagemUrl = @ImagemUrl
 		WHERE ExercicioId = @ExercicioId;
 	END

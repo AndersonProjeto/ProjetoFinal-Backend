@@ -30,6 +30,7 @@ namespace ProjetoBackend.Aplicacao.Treino.Aplicacao
             var treino = new Dominio.Entidade.Treino(
                 dto.UsuarioId,
                 dto.NomeTreino
+
             );
 
             return await _treinoRepositorio.AdicionarTreino(treino);
@@ -58,29 +59,56 @@ namespace ProjetoBackend.Aplicacao.Treino.Aplicacao
             await _treinoRepositorio.DeletarTreino(treinoId);
         }
 
-        public async Task<ProjetoBackend.Dominio.Entidade.Treino?> ObterPorId(int treinoId)
+        public async Task<Dominio.Entidade.Treino?> ObterPorId(int treinoId)
         {
             var treino = await _treinoRepositorio.ObterPorId(treinoId);
+
             if (treino == null)
-            {
                 throw new Exception("Treino não encontrado.");
-            }
-            return await _treinoRepositorio.ObterPorId(treinoId);
+
+            treino.GetType()
+                  .GetProperty("DataCriacao")?
+                  .SetValue(
+                      treino,
+                      DateTime.SpecifyKind(treino.DataCriacao, DateTimeKind.Utc)
+                  );
+
+            return treino;
         }
+
 
         public async Task<IEnumerable<TreinoPorUsuarioDTO>> ListarPorUsuario(int usuarioId)
         {
-           var usuario = await _usuarioRepositorio.ObterPorID(usuarioId);
+            var usuario = await _usuarioRepositorio.ObterPorID(usuarioId);
             if (usuario == null)
-            {
                 throw new Exception("Usuário não encontrado.");
-            }
-            return await _treinoRepositorio.ListarPorUsuario(usuarioId);
-        }
 
+            var treinos = await _treinoRepositorio.ListarPorUsuario(usuarioId);
+
+            return treinos.Select(t => new TreinoPorUsuarioDTO
+            {
+                TreinoId = t.TreinoId,
+                NomeTreino = t.NomeTreino,
+                DataCriacao = DateTime.SpecifyKind(
+                    t.DataCriacao,
+                    DateTimeKind.Utc
+                )
+            });
+        }
         public async Task<IEnumerable<TreinoResumoDTO>> ObterResumoTreinos()
         {
-            return await _treinoRepositorio.ObterResumoTreinos();
+            var treinos = await _treinoRepositorio.ObterResumoTreinos();
+
+            return treinos.Select(t => new TreinoResumoDTO
+            {
+                TreinoId = t.TreinoId,
+                NomeTreino = t.NomeTreino,
+                TotalExercicios = t.TotalExercicios,
+                DataCriacao = DateTime.SpecifyKind(
+                    t.DataCriacao,
+                    DateTimeKind.Utc
+                )
+            });
         }
 
         public async Task<int> ObterTotalExercicios(int treinoId)

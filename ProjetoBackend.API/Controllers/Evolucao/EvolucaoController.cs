@@ -1,14 +1,18 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using ProjetoBackend.Aplicacao.EvolucaoAplicacao.Interface;
+using ProjetoBackend.Aplicacao.ExercicioAplicacao.Aplicacao;
 using ProjetoBackend.Dominio.DTOs.Evolucao;
 
 namespace ProjetoBackend.API.Controllers.Evolucao
 {
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class EvolucaoController : ControllerBase
     {
         private readonly IEvolucaoAplicacao _evolucaoAplicacao;
+
 
         public EvolucaoController(IEvolucaoAplicacao evolucaoAplicacao)
         {
@@ -79,5 +83,8 @@ namespace ProjetoBackend.API.Controllers.Evolucao
             var diferenca = await _evolucaoAplicacao.ObterDiferencaPeso(usuarioId);
             return Ok(diferenca);
         }
+
+       
+
     }
 }

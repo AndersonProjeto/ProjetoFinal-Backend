@@ -10,36 +10,52 @@ namespace ProjetoBackend.Repositorio
 {
     public class EvolucaoRepositorio : BaseRepositorio, IEvolucaoRepositorio
     {
-        public EvolucaoRepositorio(IConfiguration configuration) : base(configuration)
+        public EvolucaoRepositorio(IConfiguration configuration)
+            : base(configuration)
         {
         }
+
         public async Task<int> AdicionarEvolucao(Evolucao evolucao)
         {
-            return await _connection.QuerySingleAsync<int>("spEvolucaoCriar", new { 
-            evolucao.UsuarioId,
-            evolucao.PesoKg,
-            evolucao.CinturaCm,
-            evolucao.BracoCm,
-            evolucao.CoxaCm,
-            },
-            commandType: CommandType.StoredProcedure);
+            using var conn = CriarConexao();
+
+            return await conn.QuerySingleAsync<int>(
+                "spEvolucaoCriar",
+                new
+                {
+                    evolucao.UsuarioId,
+                    evolucao.PesoKg,
+                    evolucao.CinturaCm,
+                    evolucao.BracoCm,
+                    evolucao.CoxaCm
+                },
+                commandType: CommandType.StoredProcedure
+            );
         }
 
         public async Task AtualizarEvolucao(Evolucao evolucao)
         {
-            await _connection.ExecuteAsync("spEvolucaoAtualizar", new
-            {
-                evolucao.EvolucaoId,
-                evolucao.PesoKg,
-                evolucao.CinturaCm,
-                evolucao.BracoCm,
-                evolucao.CoxaCm,
-            },
-            commandType: CommandType.StoredProcedure);
+            using var conn = CriarConexao();
+
+            await conn.ExecuteAsync(
+                "spEvolucaoAtualizar",
+                new
+                {
+                    evolucao.EvolucaoId,
+                    evolucao.PesoKg,
+                    evolucao.CinturaCm,
+                    evolucao.BracoCm,
+                    evolucao.CoxaCm
+                },
+                commandType: CommandType.StoredProcedure
+            );
         }
+
         public async Task<Evolucao?> ObterPorId(int evolucaoId)
         {
-            return await _connection.QuerySingleOrDefaultAsync<Evolucao>(
+            using var conn = CriarConexao();
+
+            return await conn.QuerySingleOrDefaultAsync<Evolucao>(
                 "spEvolucaoObter",
                 new { EvolucaoId = evolucaoId },
                 commandType: CommandType.StoredProcedure
@@ -48,34 +64,45 @@ namespace ProjetoBackend.Repositorio
 
         public async Task<Evolucao?> ObterUltimaEvolucao(int usuarioId)
         {
-            return await _connection.QuerySingleOrDefaultAsync<Evolucao>(
-                "spEvolucaoObterUltima", new
-                {
-                    UsuarioId = usuarioId
-                },
-                commandType: CommandType.StoredProcedure);
+            using var conn = CriarConexao();
+
+            return await conn.QuerySingleOrDefaultAsync<Evolucao>(
+                "spEvolucaoObterUltima",
+                new { UsuarioId = usuarioId },
+                commandType: CommandType.StoredProcedure
+            );
         }
+
         public async Task<IEnumerable<EvolucaoResumoDTO?>> ResumoEvolucao(int usuarioId)
         {
-            return await _connection.QueryAsync<EvolucaoResumoDTO>(
+            using var conn = CriarConexao();
+
+            return await conn.QueryAsync<EvolucaoResumoDTO>(
                 @"SELECT *
                   FROM vwEvolucaoResumo
                   WHERE UsuarioId = @UsuarioId",
                 new { UsuarioId = usuarioId }
             );
         }
+
         public async Task<IEnumerable<EvolucaoHistoricoDTO?>> HistoricoDeEvolucaoDoUsuario(int usuarioId)
         {
-            return await _connection.QueryAsync<EvolucaoHistoricoDTO>(
-                @"SELECT * FROM vwEvolucaoHistorico 
-                WHERE UsuarioId = @UsuarioId
-                ORDER BY DataRegistro DESC",
+            using var conn = CriarConexao();
+
+            return await conn.QueryAsync<EvolucaoHistoricoDTO>(
+                @"SELECT *
+                  FROM vwEvolucaoHistorico
+                  WHERE UsuarioId = @UsuarioId
+                  ORDER BY DataRegistro DESC",
                 new { UsuarioId = usuarioId }
-                );
+            );
         }
+
         public async Task<decimal> ObterPesoInicial(int usuarioId)
         {
-            return await _connection.ExecuteScalarAsync<decimal>(
+            using var conn = CriarConexao();
+
+            return await conn.ExecuteScalarAsync<decimal>(
                 "SELECT dbo.fnEvolucaoPesoInicial(@UsuarioId)",
                 new { UsuarioId = usuarioId }
             );
@@ -83,7 +110,9 @@ namespace ProjetoBackend.Repositorio
 
         public async Task<decimal> ObterDiferencaPeso(int usuarioId)
         {
-            return await _connection.ExecuteScalarAsync<decimal>(
+            using var conn = CriarConexao();
+
+            return await conn.ExecuteScalarAsync<decimal>(
                 "SELECT dbo.fnEvolucaoDiferencaPeso(@UsuarioId)",
                 new { UsuarioId = usuarioId }
             );

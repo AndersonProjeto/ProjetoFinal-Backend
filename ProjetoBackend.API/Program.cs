@@ -6,6 +6,7 @@ using ProjetoBackend.Aplicacao.EvolucaoAplicacao.Aplicacao;
 using ProjetoBackend.Aplicacao.EvolucaoAplicacao.Interface;
 using ProjetoBackend.Aplicacao.Exercicio.Aplicacao;
 using ProjetoBackend.Aplicacao.Exercicio.Interface;
+using ProjetoBackend.Aplicacao.ExercicioAplicacao.Aplicacao;
 using ProjetoBackend.Aplicacao.IAInteracoes.Aplicacao;
 using ProjetoBackend.Aplicacao.IAInteracoes.Interfaces;
 using ProjetoBackend.Aplicacao.Login;
@@ -20,6 +21,7 @@ using ProjetoBackend.Aplicacao.Usuarios.Interfaces;
 using ProjetoBackend.Repositorio;
 using ProjetoBackend.Repositorio.Contexto;
 using ProjetoBackend.Repositorio.Interfaces;
+using ProjetoBackend.Repositorio.ProjetoBackend.Repositorio;
 using ProjetoBackend.Services.IAServices;
 using System.Text;
 
@@ -52,7 +54,13 @@ builder.Services.AddScoped<ISenhahashAplicacao, SenhaHashAplicacao>();
 builder.Services.AddScoped<IJwtAplicacao, JwtAplicacao>();
 builder.Services.AddScoped<LoginAutorizacaoAplicacao>();
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.Converters.Add(
+            new System.Text.Json.Serialization.JsonStringEnumConverter()
+        );
+    });
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddSwaggerGen(c =>
@@ -85,7 +93,26 @@ builder.Services.AddSwaggerGen(c =>
         }
     });
 });
+builder.Services.AddScoped<ImportacaoExercicioAplicacao>();
 
+
+builder.Services.AddHttpClient<ExerciseDbService>(client =>
+{
+    client.BaseAddress = new Uri("https://exercise-db-with-videos-and-images-by-ascendapi.p.rapidapi.com");
+    client.DefaultRequestHeaders.Add("X-RapidAPI-Key", builder.Configuration["ExerciseDb:ApiKey"]);
+    client.DefaultRequestHeaders.Add("X-RapidAPI-Host", "exercise-db-with-videos-and-images-by-ascendapi.p.rapidapi.com");
+});
+
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("MinhaPoliticaCors", policy =>
+    {
+        policy.WithOrigins("http://localhost:5173") 
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
@@ -105,7 +132,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     });
 
 var app = builder.Build();
-
+app.UseCors("MinhaPoliticaCors");
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

@@ -36,7 +36,8 @@ namespace ProjetoBackend.Aplicacao.Login
             return new LoginRespostaDTO
             {
                 Token = token,
-                TempoDeExpirarOToken = DateTime.UtcNow.AddHours(2)
+                TempoDeExpirarOToken = DateTime.UtcNow.AddHours(2),
+                 UsuarioId = usuario.UsuarioId
 
             };
         }
