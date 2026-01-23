@@ -5,5 +5,7 @@ SELECT
     u.Email,
     u.DataNascimento,
     u.AlturaCm,
+    AvatarEstilo,
+    AvatarSeed,
     u.DataCriacao
 FROM Usuarios u

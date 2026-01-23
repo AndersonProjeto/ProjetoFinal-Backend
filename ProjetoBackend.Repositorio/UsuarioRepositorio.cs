@@ -28,7 +28,9 @@ namespace ProjetoBackend.Repositorio
                         usuario.Email,
                         usuario.SenhaHash,
                         usuario.DataNascimento,
-                        usuario.AlturaCm
+                        usuario.AlturaCm,
+                        usuario.AvatarEstilo,
+                        usuario.AvatarSeed
                     },
                     commandType: CommandType.StoredProcedure
                 );
@@ -46,7 +48,9 @@ namespace ProjetoBackend.Repositorio
                         usuario.Nome,
                         usuario.Email,
                         usuario.DataNascimento,
-                        usuario.AlturaCm
+                        usuario.AlturaCm,
+                        usuario.AvatarEstilo,
+                        usuario.AvatarSeed
                     },
                     commandType: CommandType.StoredProcedure
                 );

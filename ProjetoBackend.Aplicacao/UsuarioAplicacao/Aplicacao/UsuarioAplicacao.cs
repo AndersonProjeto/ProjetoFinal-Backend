@@ -32,7 +32,9 @@ namespace ProjetoBackend.Aplicacao.Usuarios.Aplicacao
                  email: dto.Email,
                  senhaHash: senhaHash,
                  dataNascimento: dto.DataNascimento,
-                 alturaCm: dto.AlturaCm
+                 alturaCm: dto.AlturaCm,
+                 avatarEstilo: dto.AvatarEstilo,
+                 avatarSeed: dto.AvatarSeed
              );
 
             return await _usuarioRepositorio.AdicionarUsuario(usuario);
@@ -48,6 +50,7 @@ namespace ProjetoBackend.Aplicacao.Usuarios.Aplicacao
             usuario.AtualizarNome(dto.Nome);
             usuario.AtualizarEmail(dto.Email);
             usuario.AtualizarAltura(dto.AlturaCm);
+            usuario.AtualizarAvatar(dto.AvatarEstilo, dto.AvatarSeed);
 
             await _usuarioRepositorio.AtualizarUsuario(usuario);
         }

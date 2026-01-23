@@ -11,8 +11,9 @@ BEGIN
         SenhaHash,
         DataNascimento,
         AlturaCm,
+         AvatarSeed,
+        AvatarEstilo,
         DataCriacao
     FROM Usuarios
     WHERE Email = @Email;
 END
-GO

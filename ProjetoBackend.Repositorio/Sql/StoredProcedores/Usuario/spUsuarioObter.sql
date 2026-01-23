@@ -11,6 +11,8 @@ BEGIN
         SenhaHash,      
         DataNascimento,
         AlturaCm,
+         AvatarSeed,
+        AvatarEstilo,
         DataCriacao
     FROM Usuarios
     WHERE UsuarioId = @UsuarioId;

@@ -17,6 +17,9 @@ namespace ProjetoBackend.Repositorio.Configuracoes
             builder.Property(u => u.DataNascimento).HasColumnName("DataNascimento").IsRequired();
             builder.Property(u => u.AlturaCm).HasColumnName("AlturaCm").HasColumnType("decimal(5,2)").IsRequired();
             builder.Property(u => u.DataCriacao).HasColumnName("DataCriacao").HasDefaultValueSql("SYSUTCDATETIME()").IsRequired();
+            builder.Property(u => u.AvatarEstilo).HasColumnName("AvatarEstilo").HasMaxLength(50);
+            builder.Property(u => u.AvatarSeed).HasColumnName("AvatarSeed").HasMaxLength(50);
+
 
             builder.HasIndex(u => u.Email).IsUnique();
         }

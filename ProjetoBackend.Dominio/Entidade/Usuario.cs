@@ -13,6 +13,9 @@ namespace ProjetoBackend.Dominio.Entidade
         public DateTime DataNascimento { get; private set; }
         public decimal AlturaCm { get; private set; }
         public DateTime DataCriacao { get; private set; }
+        public string AvatarEstilo { get; private set; } = "avataaars";
+        public string AvatarSeed { get; private set; } = string.Empty;
+
 
         public ICollection<Treino> Treinos { get; private set; } = new List<Treino>();
         public ICollection<Evolucao> Evolucoes { get; private set; } = new List<Evolucao>();
@@ -20,7 +23,8 @@ namespace ProjetoBackend.Dominio.Entidade
 
         protected Usuario() { }
 
-        public Usuario(string nome, string email, string senhaHash, DateTime dataNascimento, decimal alturaCm)
+        public Usuario(string nome, string email, string senhaHash, DateTime dataNascimento, decimal alturaCm ,string avatarEstilo,
+    string avatarSeed)
         {
             AtualizarNome(nome);
             AtualizarEmail(email);
@@ -32,6 +36,8 @@ namespace ProjetoBackend.Dominio.Entidade
 
             SenhaHash = senhaHash;
             DataNascimento = dataNascimento;
+            AvatarEstilo = avatarEstilo;
+            AvatarSeed = avatarSeed;
 
             Treinos = new List<Treino>();
             Evolucoes = new List<Evolucao>();
@@ -70,5 +76,11 @@ namespace ProjetoBackend.Dominio.Entidade
 
             SenhaHash = senhaHash;
         }
+        public void AtualizarAvatar(string estilo, string seed)
+        {
+            AvatarEstilo = estilo;
+            AvatarSeed = seed;
+        }
+
     }
 }

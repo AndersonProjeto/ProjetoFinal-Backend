@@ -12,5 +12,7 @@ namespace ProjetoBackend.Aplicacao.DTOs.Usuario
         public DateTime DataNascimento { get; set; }
         public decimal AlturaCm { get; set; }
         public DateTime DataCriacao { get; set; }
+        public string AvatarEstilo { get; set; }
+        public string AvatarSeed { get; set; }
     }
 }

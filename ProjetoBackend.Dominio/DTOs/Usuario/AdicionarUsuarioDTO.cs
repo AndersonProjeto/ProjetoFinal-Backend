@@ -7,6 +7,7 @@
         public string Senha { get; set; }
         public DateTime DataNascimento { get; set; }
         public decimal AlturaCm { get; set; }
-
+        public string AvatarSeed { get; set; }
+        public string AvatarEstilo { get; set; }
     }
 }
