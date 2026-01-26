@@ -73,18 +73,17 @@ namespace ProjetoBackend.Repositorio
             );
         }
 
-        public async Task<IEnumerable<EvolucaoResumoDTO?>> ResumoEvolucao(int usuarioId)
+        public async Task<EvolucaoResumoDTO?> ResumoEvolucao(int usuarioId)
         {
             using var conn = CriarConexao();
 
-            return await conn.QueryAsync<EvolucaoResumoDTO>(
+            return await conn.QuerySingleOrDefaultAsync<EvolucaoResumoDTO>(
                 @"SELECT *
-                  FROM vwEvolucaoResumo
-                  WHERE UsuarioId = @UsuarioId",
+          FROM vwEvolucaoResumo
+          WHERE UsuarioId = @UsuarioId",
                 new { UsuarioId = usuarioId }
             );
         }
-
         public async Task<IEnumerable<EvolucaoHistoricoDTO?>> HistoricoDeEvolucaoDoUsuario(int usuarioId)
         {
             using var conn = CriarConexao();
@@ -114,6 +113,68 @@ namespace ProjetoBackend.Repositorio
 
             return await conn.ExecuteScalarAsync<decimal>(
                 "SELECT dbo.fnEvolucaoDiferencaPeso(@UsuarioId)",
+                new { UsuarioId = usuarioId }
+            );
+        }
+
+        public async Task<decimal?> ObterCinturaInicial(int usuarioId)
+        {
+            using var conn = CriarConexao();
+
+            return await conn.ExecuteScalarAsync<decimal?>(
+                "SELECT dbo.fnEvolucaoCinturaInicial(@UsuarioId)",
+                new { UsuarioId = usuarioId }
+            );
+        }
+
+        public async Task<decimal?> ObterDiferencaCintura(int usuarioId)
+        {
+            using var conn = CriarConexao();
+
+            return await conn.ExecuteScalarAsync<decimal?>(
+                "SELECT dbo.fnEvolucaoDiferencaCintura(@UsuarioId)",
+                new { UsuarioId = usuarioId }
+            );
+        }
+
+        // BRAÇO
+        public async Task<decimal?> ObterBracoInicial(int usuarioId)
+        {
+            using var conn = CriarConexao();
+
+            return await conn.ExecuteScalarAsync<decimal?>(
+                "SELECT dbo.fnEvolucaoBracoInicial(@UsuarioId)",
+                new { UsuarioId = usuarioId }
+            );
+        }
+
+        public async Task<decimal?> ObterDiferencaBraco(int usuarioId)
+        {
+            using var conn = CriarConexao();
+
+            return await conn.ExecuteScalarAsync<decimal?>(
+                "SELECT dbo.fnEvolucaoDiferencaBraco(@UsuarioId)",
+                new { UsuarioId = usuarioId }
+            );
+        }
+
+        // COXA
+        public async Task<decimal?> ObterCoxaInicial(int usuarioId)
+        {
+            using var conn = CriarConexao();
+
+            return await conn.ExecuteScalarAsync<decimal?>(
+                "SELECT dbo.fnEvolucaoCoxaInicial(@UsuarioId)",
+                new { UsuarioId = usuarioId }
+            );
+        }
+
+        public async Task<decimal?> ObterDiferencaCoxa(int usuarioId)
+        {
+            using var conn = CriarConexao();
+
+            return await conn.ExecuteScalarAsync<decimal?>(
+                "SELECT dbo.fnEvolucaoDiferencaCoxa(@UsuarioId)",
                 new { UsuarioId = usuarioId }
             );
         }

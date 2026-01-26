@@ -12,5 +12,7 @@ namespace ProjetoBackend.Aplicacao.IAInteracoes.Interfaces
         Task<int> AdicionarIAInteracao(IAInteracao interacao);
         Task<IEnumerable<IAInteracao>> ListarIAInteracoesPorUsuario(int usuarioId);
         Task<IAInteracao?> ObterUltimaInteracao(int usuarioId);
+        Task<IEnumerable<IAInteracao>> ListarUltimasInteracoes(int usuarioId, int quantidade);
+
     }
 }

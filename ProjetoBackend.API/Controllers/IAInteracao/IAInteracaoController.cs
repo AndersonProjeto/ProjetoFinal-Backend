@@ -54,6 +54,20 @@ namespace ProjetoBackend.API.Controllers.IAInteracao
                 return BadRequest(new { mensagem = ex.Message });
             }
         }
+        [HttpGet("ultimas/{usuarioId}/{quantidade}")]
+        public async Task<IActionResult> ListarUltimas(int usuarioId, int quantidade)
+        {
+            try
+            {
+                var interacoes = await _iaInteracaoAplicacao.ListarUltimasInteracoes(usuarioId, quantidade);
+                return Ok(interacoes);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { mensagem = ex.Message });
+            }
+        }
+
         [HttpPost("perguntar")]
         public async Task<IActionResult> Perguntar([FromBody] PerguntarParaIADTO dto)
         {

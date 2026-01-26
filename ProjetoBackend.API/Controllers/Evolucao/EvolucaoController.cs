@@ -83,8 +83,49 @@ namespace ProjetoBackend.API.Controllers.Evolucao
             var diferenca = await _evolucaoAplicacao.ObterDiferencaPeso(usuarioId);
             return Ok(diferenca);
         }
+        [HttpGet("usuario/{usuarioId}/cintura-inicial")]
+        public async Task<IActionResult> ObterCinturaInicial(int usuarioId)
+        {
+            var cinturaInicial = await _evolucaoAplicacao.ObterCinturaInicial(usuarioId);
+            return Ok(cinturaInicial);
+        }
 
-       
+        [HttpGet("usuario/{usuarioId}/diferenca-cintura")]
+        public async Task<IActionResult> ObterDiferencaCintura(int usuarioId)
+        {
+            var diferenca = await _evolucaoAplicacao.ObterDiferencaCintura(usuarioId);
+            return Ok(diferenca);
+        }
+
+        [HttpGet("usuario/{usuarioId}/braco-inicial")]
+        public async Task<IActionResult> ObterBracoInicial(int usuarioId)
+        {
+            var bracoInicial = await _evolucaoAplicacao.ObterBracoInicial(usuarioId);
+            return Ok(bracoInicial);
+        }
+
+        [HttpGet("usuario/{usuarioId}/diferenca-braco")]
+        public async Task<IActionResult> ObterDiferencaBraco(int usuarioId)
+        {
+            var diferenca = await _evolucaoAplicacao.ObterDiferencaBraco(usuarioId);
+            return Ok(diferenca);
+        }
+
+        [HttpGet("usuario/{usuarioId}/coxa-inicial")]
+        public async Task<IActionResult> ObterCoxaInicial(int usuarioId)
+        {
+            var coxaInicial = await _evolucaoAplicacao.ObterCoxaInicial(usuarioId);
+            return Ok(coxaInicial);
+        }
+
+        [HttpGet("usuario/{usuarioId}/diferenca-coxa")]
+        public async Task<IActionResult> ObterDiferencaCoxa(int usuarioId)
+        {
+            var diferenca = await _evolucaoAplicacao.ObterDiferencaCoxa(usuarioId);
+            return Ok(diferenca);
+        }
+
+
 
     }
 }

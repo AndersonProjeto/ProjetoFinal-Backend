@@ -29,6 +29,17 @@ namespace ProjetoBackend.Aplicacao.IAInteracoes.Aplicacao
 
             return await _iaInteracaoRepositorio.ListarIAInteracoesPorUsuario(usuarioId);
         }
+        public async Task<IEnumerable<IAInteracao>> ListarUltimasInteracoes(int usuarioId, int quantidade)
+        {
+            if (usuarioId <= 0)
+                throw new ArgumentException("Usuário inválido.");
+
+            if (quantidade <= 0)
+                throw new ArgumentException("Quantidade inválida.");
+
+            return await _iaInteracaoRepositorio.ListarUltimasInteracoes(usuarioId, quantidade);
+        }
+
 
         public async Task<IAInteracao?> ObterUltimaInteracao(int usuarioId)
         {
@@ -41,6 +52,7 @@ namespace ProjetoBackend.Aplicacao.IAInteracoes.Aplicacao
             return await _iaInteracaoRepositorio.ObterUltimaInteracao(usuarioId);
         }
 
+
         private void ValidarInteracao(IAInteracao interacao)
         {
             if (interacao == null)
@@ -51,9 +63,6 @@ namespace ProjetoBackend.Aplicacao.IAInteracoes.Aplicacao
 
             if (string.IsNullOrWhiteSpace(interacao.Pergunta))
                 throw new ArgumentException("Pergunta é obrigatória.");
-
-            if (interacao.Pergunta.Length < 5)
-                throw new ArgumentException("Pergunta muito curta. Deve ter no mínimo 5 caracteres.");
 
             if (interacao.Pergunta.Length > 500)
                 throw new ArgumentException("Pergunta muito longa. Deve ter no máximo 500 caracteres.");

@@ -57,5 +57,20 @@ namespace ProjetoBackend.Repositorio
                 commandType: CommandType.StoredProcedure
             );
         }
+        public async Task<IEnumerable<IAInteracao>> ListarUltimasInteracoes(int usuarioId, int quantidade)
+        {
+            using var conn = CriarConexao();
+
+            return await conn.QueryAsync<IAInteracao>(
+                "spIAInteracaoObterUltimos",
+                new
+                {
+                    UsuarioId = usuarioId,
+                    Quantidade = quantidade
+                },
+                commandType: CommandType.StoredProcedure
+            );
+        }
+
     }
 }
