@@ -32,6 +32,7 @@
 
   <ItemGroup>
     <Folder Include="Sql\Functions\Exercicio\" />
+    <Folder Include="Sql\Functions\TreinoExercicio\" />
     <Folder Include="Sql\Functions\Treino\" />
     <Folder Include="Sql\StoredProcedores\Evolucao\" />
     <Folder Include="Sql\Views\IAInteracao\" />

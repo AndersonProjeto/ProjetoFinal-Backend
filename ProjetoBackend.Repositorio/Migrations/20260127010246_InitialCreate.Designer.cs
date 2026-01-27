@@ -12,8 +12,8 @@ using ProjetoBackend.Repositorio.Contexto;
 namespace ProjetoBackend.Repositorio.Migrations
 {
     [DbContext(typeof(ProjetoContexto))]
-    [Migration("20260114235731_CriarStoredProceduresUsuario")]
-    partial class CriarStoredProceduresUsuario
+    [Migration("20260127010246_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -76,17 +76,24 @@ namespace ProjetoBackend.Repositorio.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ExercicioId"));
 
+                    b.Property<string>("Descricao")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)")
+                        .HasColumnName("Descricao");
+
                     b.Property<string>("Equipamento")
                         .IsRequired()
                         .HasMaxLength(80)
                         .HasColumnType("nvarchar(80)")
                         .HasColumnName("Equipamento");
 
-                    b.Property<string>("GrupoMuscular")
-                        .IsRequired()
+                    b.Property<int>("GrupoMuscular")
                         .HasMaxLength(80)
-                        .HasColumnType("nvarchar(80)")
+                        .HasColumnType("int")
                         .HasColumnName("GrupoMuscular");
+
+                    b.Property<string>("ImagemUrl")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Nome")
                         .IsRequired()
@@ -214,6 +221,18 @@ namespace ProjetoBackend.Repositorio.Migrations
                     b.Property<decimal>("AlturaCm")
                         .HasColumnType("decimal(5,2)")
                         .HasColumnName("AlturaCm");
+
+                    b.Property<string>("AvatarEstilo")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)")
+                        .HasColumnName("AvatarEstilo");
+
+                    b.Property<string>("AvatarSeed")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)")
+                        .HasColumnName("AvatarSeed");
 
                     b.Property<DateTime>("DataCriacao")
                         .ValueGeneratedOnAdd()

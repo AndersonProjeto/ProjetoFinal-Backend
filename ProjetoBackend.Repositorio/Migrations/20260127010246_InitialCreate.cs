@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace ProjetoBackend.Repositorio.Migrations
 {
     /// <inheritdoc />
-    public partial class CriacaoInicial : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -18,8 +18,10 @@ namespace ProjetoBackend.Repositorio.Migrations
                     ExercicioId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Nome = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
-                    GrupoMuscular = table.Column<string>(type: "nvarchar(80)", maxLength: 80, nullable: false),
-                    Equipamento = table.Column<string>(type: "nvarchar(80)", maxLength: 80, nullable: false)
+                    GrupoMuscular = table.Column<int>(type: "int", maxLength: 80, nullable: false),
+                    Equipamento = table.Column<string>(type: "nvarchar(80)", maxLength: 80, nullable: false),
+                    Descricao = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true),
+                    ImagemUrl = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -37,7 +39,9 @@ namespace ProjetoBackend.Repositorio.Migrations
                     SenhaHash = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     DataNascimento = table.Column<DateTime>(type: "datetime2", nullable: false),
                     AlturaCm = table.Column<decimal>(type: "decimal(5,2)", nullable: false),
-                    DataCriacao = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "SYSUTCDATETIME()")
+                    DataCriacao = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "SYSUTCDATETIME()"),
+                    AvatarEstilo = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    AvatarSeed = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false)
                 },
                 constraints: table =>
                 {
