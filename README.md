@@ -103,7 +103,7 @@ IAInteracoes
 | Resposta      | string   | Resposta da IA           |
 | DataHora      | datetime | Data e hora da interação |
 
-## ⚙️ Stored Procedures
+##  Stored Procedures
 
 As Stored Procedures são rotinas SQL armazenadas no banco de dados que encapsulam operações e regras de negócio, permitindo que a aplicação execute comandos de forma segura, organizada e eficiente.
 
@@ -145,7 +145,7 @@ Evolucoes
 OBS: na IAinteracoes e tambem na Evolucoes, foi visto que excluir nao faria muito sentido no contexto
 
 
-## 🧮 Functions
+##  Functions
 
 As Functions (Funções) são rotinas SQL que retornam valores ou tabelas e são utilizadas para realizar cálculos, consultas reutilizáveis e regras específicas diretamente no banco de dados.
 
@@ -182,7 +182,7 @@ Evolucoes
 Treino Exercicio e IAinteracoes nao tem registro de Functions
 
 
-## 👁️ Views
+##  Views
 
 As Views são consultas SQL salvas no banco de dados que representam uma visualização lógica dos dados, combinando informações de uma ou mais tabelas.
 
@@ -222,10 +222,30 @@ Evolucoes
 
 <img width="147" height="59" alt="image" src="https://github.com/user-attachments/assets/bd6b9a87-a149-499e-bd55-f23a0ab03f7f" />
 
+----
+
+### Exemplo de chamada no Swagger
+
+Usuario/Obter
+
+<img width="1273" height="906" alt="image" src="https://github.com/user-attachments/assets/67e65161-1526-4c85-8208-9e9c0faa554c" />
+
+chamadas de Usuario
+
+<img width="1338" height="386" alt="image" src="https://github.com/user-attachments/assets/fa960316-4419-4720-8fdf-84485e9358e1" />
+
+
+Todos as implementações 
+
+<img width="1257" height="707" alt="image" src="https://github.com/user-attachments/assets/934f6751-01ee-4a19-b2db-fed9c572fe38" />
+<img width="1150" height="706" alt="image" src="https://github.com/user-attachments/assets/1635a8e6-b52f-45c2-8fd0-a745728eedbf" />
+<img width="1177" height="610" alt="image" src="https://github.com/user-attachments/assets/7edf13fe-6c97-406b-af32-dd30295152a8" />
+<img width="1237" height="325" alt="image" src="https://github.com/user-attachments/assets/3f7bc251-a6be-44bd-8875-6adcf9b0d111" />
 
 
 
-## 🧱 Arquitetura do Sistema
+
+##  Arquitetura do Sistema
 
 O backend do projeto ACADIA foi desenvolvido seguindo uma arquitetura em camadas, com separação clara de responsabilidades entre os projetos da solução.
 
