@@ -269,6 +269,10 @@ Camada responsável pela integração com serviços externos, como a API de Inte
 Essa arquitetura facilita a manutenção, organização do código, escalabilidade do sistema e permite que cada camada evolua de forma independente.
 
 
+## Inteligencia Artificial 
+
+Chatbot interativo voltado para treino, saúde e nutrição, oferecendo suporte ao usuário com orientações e acompanhamento para melhorar resultados e manter consistência.
+
 ## Melhorias Futuras
 
 - Execução de treino em tempo real  
