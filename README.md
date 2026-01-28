@@ -230,11 +230,6 @@ Usuario/Obter
 
 <img width="1273" height="906" alt="image" src="https://github.com/user-attachments/assets/67e65161-1526-4c85-8208-9e9c0faa554c" />
 
-chamadas de Usuario
-
-<img width="1338" height="386" alt="image" src="https://github.com/user-attachments/assets/fa960316-4419-4720-8fdf-84485e9358e1" />
-
-
 Todos as implementações 
 
 <img width="1257" height="707" alt="image" src="https://github.com/user-attachments/assets/934f6751-01ee-4a19-b2db-fed9c572fe38" />
