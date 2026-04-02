@@ -1,10 +1,12 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using ProjetoBackend.API.Validadores;
 using ProjetoBackend.Aplicacao.DTOs.Usuario;
 using ProjetoBackend.Aplicacao.Login;
 using ProjetoBackend.Aplicacao.Login.DTO;
 using ProjetoBackend.Aplicacao.Usuarios.Interfaces;
 using ProjetoBackend.Dominio.DTOs.Usuario;
+using System.ComponentModel.DataAnnotations;
 
 namespace ProjetoBackend.API.Controllers.Usuario
 {
@@ -40,6 +42,20 @@ namespace ProjetoBackend.API.Controllers.Usuario
         {
             try
             {
+                var validator = new UsuarioValidador();
+                var resultado = validator.Validate(dto);
+
+                if (!resultado.IsValid)
+                {
+                    var erros = resultado.Errors.Select(e => new
+                    {
+                        campo = e.PropertyName,
+                        erro = e.ErrorMessage
+                    });
+
+                    return BadRequest(new { erros });
+                }
+
                 var id = await _usuarioAplicacao.AdicionarUsuario(dto);
                 return CreatedAtAction(nameof(ObterPorId), new { usuarioId = id }, dto);
             }
@@ -48,7 +64,6 @@ namespace ProjetoBackend.API.Controllers.Usuario
                 return BadRequest(new { mensagem = ex.Message });
             }
         }
-
         [HttpGet("{usuarioId}")]
         [Authorize]
         public async Task<IActionResult> ObterPorId(int usuarioId)
