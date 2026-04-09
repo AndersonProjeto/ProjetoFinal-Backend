@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using ProjetoBackend.API.Validadores;
 using ProjetoBackend.Aplicacao.EvolucaoAplicacao.Aplicacao;
 using ProjetoBackend.Aplicacao.EvolucaoAplicacao.Interface;
 using ProjetoBackend.Aplicacao.Exercicio.Aplicacao;
