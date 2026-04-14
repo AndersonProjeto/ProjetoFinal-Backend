@@ -14,7 +14,7 @@ namespace ProjetoBackend.Repositorio.Interfaces
 
         Task<Treino?> ObterPorId(int treinoId);
         Task<IEnumerable<TreinoPorUsuarioDTO>> ListarPorUsuario(int usuarioId);
-
+        Task<IEnumerable<Treino>> ListarEntidadesPorUsuario(int usuarioId);
         Task<IEnumerable<TreinoResumoDTO>> ObterResumoTreinos();
         Task<int> TotalExerciciosDoTreino(int treinoId);
         Task<int> TotalTreinosDoUsuario(int usuarioId);

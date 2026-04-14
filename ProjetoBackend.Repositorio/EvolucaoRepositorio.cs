@@ -27,7 +27,9 @@ namespace ProjetoBackend.Repositorio
                     evolucao.PesoKg,
                     evolucao.CinturaCm,
                     evolucao.BracoCm,
-                    evolucao.CoxaCm
+                    evolucao.CoxaCm,
+                    evolucao.DataRegistro
+
                 },
                 commandType: CommandType.StoredProcedure
             );
@@ -73,17 +75,29 @@ namespace ProjetoBackend.Repositorio
             );
         }
 
+        public async Task<IEnumerable<Evolucao>> ListarPorUsuario(int usuarioId) 
+        {
+            using var conn = CriarConexao();
+
+            return await conn.QueryAsync<Evolucao>(
+                "spEvolucaoListarPorUsuario",
+                new { UsuarioId = usuarioId },
+                commandType: CommandType.StoredProcedure
+            );
+        }
+
         public async Task<EvolucaoResumoDTO?> ResumoEvolucao(int usuarioId)
         {
             using var conn = CriarConexao();
 
             return await conn.QuerySingleOrDefaultAsync<EvolucaoResumoDTO>(
                 @"SELECT *
-          FROM vwEvolucaoResumo
-          WHERE UsuarioId = @UsuarioId",
+                  FROM vwEvolucaoResumo
+                  WHERE UsuarioId = @UsuarioId",
                 new { UsuarioId = usuarioId }
             );
         }
+
         public async Task<IEnumerable<EvolucaoHistoricoDTO?>> HistoricoDeEvolucaoDoUsuario(int usuarioId)
         {
             using var conn = CriarConexao();
@@ -137,7 +151,6 @@ namespace ProjetoBackend.Repositorio
             );
         }
 
-        // BRAÇO
         public async Task<decimal?> ObterBracoInicial(int usuarioId)
         {
             using var conn = CriarConexao();
@@ -158,7 +171,6 @@ namespace ProjetoBackend.Repositorio
             );
         }
 
-        // COXA
         public async Task<decimal?> ObterCoxaInicial(int usuarioId)
         {
             using var conn = CriarConexao();

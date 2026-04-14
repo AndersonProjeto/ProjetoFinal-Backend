@@ -22,7 +22,8 @@ namespace ProjetoBackend.Aplicacao.EvolucaoAplicacao.Aplicacao
                 adicionarEvolucaoDTO.PesoKg,
                 adicionarEvolucaoDTO.CinturaCm,
                 adicionarEvolucaoDTO.BracoCm,
-                adicionarEvolucaoDTO.CoxaCm
+                adicionarEvolucaoDTO.CoxaCm,
+                adicionarEvolucaoDTO.DataRegistro
             );
 
             return await _evolucaoRepositorio.AdicionarEvolucao(evolucao);
@@ -55,7 +56,6 @@ namespace ProjetoBackend.Aplicacao.EvolucaoAplicacao.Aplicacao
 
         public async Task<EvolucaoResumoDTO?> ResumoEvolucao(int usuarioId)
         {
-           
             var resumo = await _evolucaoRepositorio.ResumoEvolucao(usuarioId);
             if (resumo.IMC != null)
             {
@@ -81,6 +81,7 @@ namespace ProjetoBackend.Aplicacao.EvolucaoAplicacao.Aplicacao
         {
             return await _evolucaoRepositorio.ObterDiferencaPeso(usuarioId);
         }
+
         public async Task<decimal?> ObterCinturaInicial(int usuarioId)
         {
             return await _evolucaoRepositorio.ObterCinturaInicial(usuarioId);
@@ -110,6 +111,7 @@ namespace ProjetoBackend.Aplicacao.EvolucaoAplicacao.Aplicacao
         {
             return await _evolucaoRepositorio.ObterDiferencaCoxa(usuarioId);
         }
+
         public static class ImcService
         {
             public static (string Classificacao, string Explicacao) ClassificarImc(decimal imc)
@@ -151,7 +153,7 @@ namespace ProjetoBackend.Aplicacao.EvolucaoAplicacao.Aplicacao
                 if (imc < 29.9m)
                     return (
                         "Sobrepeso",
-                        "Seu IMC indica sobrepeso. Isso não significa que você está “errado”, mas que seu corpo está carregando mais peso do que o ideal. Isso pode aumentar o risco de doenças ao longo do tempo e também pode afetar seu rendimento e bem-estar.\n\n" +
+                        "Seu IMC indica sobrepeso. Isso não significa que você está \"errado\", mas que seu corpo está carregando mais peso do que o ideal. Isso pode aumentar o risco de doenças ao longo do tempo e também pode afetar seu rendimento e bem-estar.\n\n" +
                         "O que pode estar acontecendo:\n" +
                         "- Excesso de calorias ao longo do tempo\n" +
                         "- Consumo alto de alimentos ultraprocessados\n" +

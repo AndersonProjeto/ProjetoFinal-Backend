@@ -104,5 +104,14 @@ namespace ProjetoBackend.Repositorio
                 new { UsuarioId = usuarioId }
             );
         }
+        public async Task<IEnumerable<Treino>> ListarEntidadesPorUsuario(int usuarioId)
+        {
+            using var conn = CriarConexao();
+            return await conn.QueryAsync<Treino>(
+                "spTreinoListarPorUsuario",
+                new { UsuarioId = usuarioId },
+                commandType: CommandType.StoredProcedure
+            );
+        }
     }
 }

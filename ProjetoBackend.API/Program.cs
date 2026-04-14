@@ -10,6 +10,8 @@ using ProjetoBackend.Aplicacao.Exercicio.Interface;
 using ProjetoBackend.Aplicacao.ExercicioAplicacao.Aplicacao;
 using ProjetoBackend.Aplicacao.IAInteracoes.Aplicacao;
 using ProjetoBackend.Aplicacao.IAInteracoes.Interfaces;
+using ProjetoBackend.Aplicacao.IARelatorios.Aplicacao;
+using ProjetoBackend.Aplicacao.IARelatorios.Interfaces;
 using ProjetoBackend.Aplicacao.Login;
 using ProjetoBackend.Aplicacao.Login.Interface;
 using ProjetoBackend.Aplicacao.Seguranca;
@@ -55,6 +57,10 @@ builder.Services.AddScoped<ISenhahashAplicacao, SenhaHashAplicacao>();
 builder.Services.AddScoped<IJwtAplicacao, JwtAplicacao>();
 builder.Services.AddScoped<LoginAutorizacaoAplicacao>();
 
+builder.Services.AddScoped<IIARelatorioRepositorio, IARelatorioRepositorio>();
+builder.Services.AddScoped<IARelatorioService>();
+
+builder.Services.AddScoped<IIARelatorioAplicacao, IARelatorioAplicacao>();
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
     {

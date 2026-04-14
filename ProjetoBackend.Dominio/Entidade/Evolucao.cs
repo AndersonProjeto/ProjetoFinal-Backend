@@ -16,7 +16,13 @@
 
         protected Evolucao() { }
 
-        public Evolucao(int usuarioId,decimal pesoKg,decimal? cinturaCm,decimal? bracoCm,decimal? coxaCm)
+        public Evolucao(
+            int usuarioId,
+            decimal pesoKg,
+            decimal? cinturaCm,
+            decimal? bracoCm,
+            decimal? coxaCm,
+            DateTime? dataRegistro = null)
         {
             ValidarPeso(pesoKg);
 
@@ -25,9 +31,12 @@
             CinturaCm = cinturaCm;
             BracoCm = bracoCm;
             CoxaCm = coxaCm;
-            DataRegistro = DateTime.UtcNow;
+            DataRegistro = dataRegistro.HasValue
+                ? DateTime.SpecifyKind(dataRegistro.Value, DateTimeKind.Utc)
+                : DateTime.UtcNow;
         }
-        public void Atualizar( decimal pesoKg,decimal? cinturaCm,decimal? bracoCm, decimal? coxaCm)
+
+        public void Atualizar(decimal pesoKg, decimal? cinturaCm, decimal? bracoCm, decimal? coxaCm)
         {
             ValidarPeso(pesoKg);
 

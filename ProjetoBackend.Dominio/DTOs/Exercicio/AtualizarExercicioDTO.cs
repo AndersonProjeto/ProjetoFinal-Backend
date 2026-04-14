@@ -14,5 +14,6 @@ namespace ProjetoBackend.Dominio.DTOs.Exercicio
         public string? Descricao { get; set; }
         public string ImagemUrl { get; set; }
 
+        public string VideoUrl { get; set; }
     }
 }

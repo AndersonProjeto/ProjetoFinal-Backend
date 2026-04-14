@@ -27,7 +27,9 @@ namespace ProjetoBackend.Repositorio
                     exercicio.Nome,
                     exercicio.GrupoMuscular,
                     exercicio.Equipamento,
-                    exercicio.Descricao
+                    exercicio.Descricao,
+                    exercicio.ImagemUrl,
+                    exercicio.VideoUrl
                 },
                 commandType: CommandType.StoredProcedure
             );
@@ -44,7 +46,10 @@ namespace ProjetoBackend.Repositorio
                     exercicio.ExercicioId,
                     exercicio.Nome,
                     exercicio.GrupoMuscular,
-                    exercicio.Equipamento
+                    exercicio.Equipamento,
+                    exercicio.Descricao,
+                    exercicio.ImagemUrl,
+                    exercicio.VideoUrl
                 },
                 commandType: CommandType.StoredProcedure
             );
@@ -61,7 +66,6 @@ namespace ProjetoBackend.Repositorio
             );
         }
 
-   
         public async Task<IEnumerable<Exercicio>> ListarPorGrupoMuscular(EnumGrupoMuscular grupoMuscular)
         {
             using var conn = CriarConexao();

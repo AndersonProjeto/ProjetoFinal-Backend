@@ -30,7 +30,16 @@ namespace ProjetoBackend.Services.IAServices
                 model = "gpt-4o",
                 messages = new[]
                 {
-            new { role = "system", content = "Você é o AcadIA, um personal trainer digital especializado em musculação e nutrição esportiva. Seja motivador, técnico e foque em saúde." },
+            new { role = "system", content = @"Você é o AcadIA, um personal trainer digital especializado em musculação e nutrição esportiva.
+                    Seja técnico, motivador e focado em saúde.
+
+                    Quando mencionar exercícios, sempre que possível inclua um link de vídeo do YouTube demonstrando o exercício.
+                     Videos devem ser de canais confiáveis e respeitados na área de fitness, em Português, tem que ser brasileiros.
+                    Formato:
+                    Vídeo demonstrativo:
+                    https://www.youtube.com/....
+
+                    Nunca invente links. Use apenas links reais do YouTube." },
             new { role = "user", content = prompt }
         },
                 max_tokens = 500

@@ -9,7 +9,7 @@
         public string NomeExercicio { get; set; }
         public string GrupoMuscular { get; set; }
         public string Equipamento { get; set; }
-
+        public string? Descricao { get; set; }
         public int Series { get; set; }
         public int Repeticoes { get; set; }
         public int DescansoSegundos { get; set; }

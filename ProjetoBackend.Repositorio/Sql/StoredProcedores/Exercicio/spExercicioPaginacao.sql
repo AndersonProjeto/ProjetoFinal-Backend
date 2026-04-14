@@ -1,21 +1,20 @@
-CREATE PROCEDURE spExercicioPaginacao
+ALTER PROCEDURE spExercicioPaginacao
     @Pagina INT,
     @TamanhoPagina INT
 AS
 BEGIN
     SET NOCOUNT ON;
-
     DECLARE @Offset INT = (@Pagina - 1) * @TamanhoPagina;
 
-    SELECT COUNT(*) AS TotalItens
-    FROM Exercicios;
+    SELECT COUNT(*) AS TotalItens FROM Exercicios;
 
     SELECT
         ExercicioId,
         Nome,
         GrupoMuscular,
         Equipamento,
-        Descricao
+        Descricao,
+        VideoUrl      
     FROM Exercicios
     ORDER BY ExercicioId
     OFFSET @Offset ROWS

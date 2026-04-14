@@ -11,5 +11,7 @@ namespace ProjetoBackend.Dominio.DTOs.Exercicio
         public EnumGrupoMuscular GrupoMuscular { get; set; }
         public string Equipamento { get; set; }
         public string? Descricao { get; set; }
+        public string ImagemUrl { get; set; }
+        public string VideoUrl { get; set; }
     }
 }

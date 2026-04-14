@@ -21,7 +21,9 @@ namespace ProjetoBackend.Aplicacao.Exercicio.Aplicacao
                 dto.Nome,
                 (EnumGrupoMuscular)dto.GrupoMuscular,
                 dto.Equipamento,
-                dto.Descricao
+                dto.Descricao,
+                dto.ImagemUrl,
+                dto.VideoUrl
             );
 
             return await _exercicioRepositorio.AdicionarExercicio(exercicio);
@@ -29,7 +31,6 @@ namespace ProjetoBackend.Aplicacao.Exercicio.Aplicacao
 
         public async Task AtualizarExercicio(AtualizarExercicioDTO dto)
         {
-         
             var exercicioExistente = await _exercicioRepositorio.ObterPorID(dto.ExercicioId);
 
             if (exercicioExistente == null)
@@ -37,13 +38,12 @@ namespace ProjetoBackend.Aplicacao.Exercicio.Aplicacao
 
             exercicioExistente.Atualizar(
                 dto.Nome,
-               (EnumGrupoMuscular)dto.GrupoMuscular,
+                (EnumGrupoMuscular)dto.GrupoMuscular,
                 dto.Equipamento,
                 dto.Descricao,
-                dto.ImagemUrl
-                );
-
-
+                dto.ImagemUrl,
+                dto.VideoUrl
+            );
 
             await _exercicioRepositorio.AtualizarExercicio(exercicioExistente);
         }
@@ -60,13 +60,10 @@ namespace ProjetoBackend.Aplicacao.Exercicio.Aplicacao
 
         public async Task<ExercicioDetalhadoDto?> ObterExercicioDetalhado(int exercicioId)
         {
-            
             if (exercicioId <= 0)
-            {
                 throw new ArgumentException("ID inválido.");
-            }
-               
-                return await _exercicioRepositorio.ObterExercicioDetalhado(exercicioId);
+
+            return await _exercicioRepositorio.ObterExercicioDetalhado(exercicioId);
         }
 
         public async Task<Dominio.Entidade.Exercicio> ObterPorID(int exercicioId)
@@ -74,16 +71,13 @@ namespace ProjetoBackend.Aplicacao.Exercicio.Aplicacao
             var exercicio = await _exercicioRepositorio.ObterPorID(exercicioId);
 
             if (exercicio == null)
-            {
                 throw new Exception("Exercício não encontrado.");
-            }
 
             return await _exercicioRepositorio.ObterPorID(exercicioId);
         }
 
         public async Task<IEnumerable<Dominio.Entidade.Exercicio>> ObterTodosExercicios()
         {
-            
             return await _exercicioRepositorio.ObterTodosExercicios();
         }
 
@@ -100,7 +94,6 @@ namespace ProjetoBackend.Aplicacao.Exercicio.Aplicacao
         public async Task<PaginaResultado<Dominio.Entidade.Exercicio>> ObterExerciciosPaginados(int pagina, int tamanhoPagina)
         {
             return await _exercicioRepositorio.ObterExerciciosPaginados(pagina, tamanhoPagina);
-
         }
     }
 }

@@ -12,6 +12,7 @@ namespace ProjetoBackend.Repositorio.Interfaces
         Task<Evolucao?> ObterUltimaEvolucao(int usuarioId);
         Task<EvolucaoResumoDTO?> ResumoEvolucao(int usuarioId);
         Task<IEnumerable<EvolucaoHistoricoDTO?>> HistoricoDeEvolucaoDoUsuario(int usuarioId);
+        Task<IEnumerable<Evolucao>> ListarPorUsuario(int usuarioId);
         Task<decimal> ObterPesoInicial(int usuarioId);
         Task<decimal> ObterDiferencaPeso(int usuarioId);
         Task<decimal?> ObterCinturaInicial(int usuarioId);

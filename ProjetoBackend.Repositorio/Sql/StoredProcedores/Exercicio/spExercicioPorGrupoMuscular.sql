@@ -1,16 +1,17 @@
 CREATE PROCEDURE spExercicioPorGrupoMuscular
 (
-@GrupoMuscular INT
+    @GrupoMuscular INT
 )
 AS
 BEGIN
-	SELECT
-		ExercicioId,
-		Nome,
-		GrupoMuscular,
-		Equipamento,
-		descricao
-	FROM Exercicios
-	WHERE GrupoMuscular = @GrupoMuscular
-	ORDER BY Nome;
+    SELECT
+        ExercicioId,
+        Nome,
+        GrupoMuscular,
+        Equipamento,
+        Descricao,
+        VideoUrl
+    FROM Exercicios
+    WHERE GrupoMuscular = @GrupoMuscular
+    ORDER BY Nome;
 END
