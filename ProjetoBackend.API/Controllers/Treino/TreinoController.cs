@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using ProjetoBackend.Aplicacao.TreinoAplicacao.Interface;
 using ProjetoBackend.Dominio.DTOs.Treino;
 
 namespace ProjetoBackend.API.Controllers.Treino
 {
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class TreinoController : ControllerBase

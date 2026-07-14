@@ -8,9 +8,9 @@ namespace ProjetoBackend.Dominio.DTOs.Exercicio
 {
     public class ExerciseDbResponse
     {
-        public string ExerciseId { get; set; }
-        public string Name { get; set; }
-        public string ImageUrl { get; set; }
+        public string ExerciseId { get; set; } = string.Empty;
+        public string Name { get; set; } = string.Empty;
+        public string ImageUrl { get; set; } = string.Empty;
     }
 
 }

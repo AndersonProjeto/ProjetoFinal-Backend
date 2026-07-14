@@ -12,7 +12,8 @@ namespace ProjetoBackend.Repositorio
 
         protected BaseRepositorio(IConfiguration configuration)
         {
-            _connectionString = configuration.GetConnectionString("DefaultConnection");
+            _connectionString = configuration.GetConnectionString("DefaultConnection")
+                ?? throw new InvalidOperationException("ConnectionString 'DefaultConnection' não configurada.");
         }
 
         protected IDbConnection CriarConexao()

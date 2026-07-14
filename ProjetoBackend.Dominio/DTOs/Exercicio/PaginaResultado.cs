@@ -8,7 +8,7 @@ namespace ProjetoBackend.Dominio.DTOs.Exercicio
 {
     public class PaginaResultado<T>
     {
-        public IEnumerable<T> Items { get; set; }
+        public IEnumerable<T> Items { get; set; } = Enumerable.Empty<T>();
         public int TotalItems { get; set; }
     }
 }

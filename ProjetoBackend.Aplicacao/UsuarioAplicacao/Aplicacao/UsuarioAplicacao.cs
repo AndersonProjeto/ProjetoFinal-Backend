@@ -7,6 +7,8 @@ using ProjetoBackend.Dominio.DTOs.Usuario;
 using ProjetoBackend.Repositorio.Interfaces;
 
 
+using ProjetoBackend.Dominio.Excecoes;
+
 namespace ProjetoBackend.Aplicacao.Usuarios.Aplicacao
 {
     public class UsuarioAplicacao : IUsuarioAplicacao
@@ -45,7 +47,7 @@ namespace ProjetoBackend.Aplicacao.Usuarios.Aplicacao
             var usuario = await _usuarioRepositorio.ObterPorID(dto.UsuarioId);
 
             if (usuario == null)
-                throw new Exception("Usuário não encontrado.");
+                throw new NaoEncontradoException("Usuário não encontrado.");
 
             usuario.AtualizarNome(dto.Nome);
             usuario.AtualizarEmail(dto.Email);
@@ -60,10 +62,10 @@ namespace ProjetoBackend.Aplicacao.Usuarios.Aplicacao
             var usuario = await _usuarioRepositorio.ObterPorID(dto.UsuarioId);
 
             if (usuario == null)
-                throw new Exception("Usuário não encontrado.");
+                throw new NaoEncontradoException("Usuário não encontrado.");
 
             if (string.IsNullOrWhiteSpace(usuario.SenhaHash))
-                throw new Exception("Usuário sem senha cadastrada.");
+                throw new RegraDeNegocioException("Usuário sem senha cadastrada.");
 
             var senhaValida = _senhahashAplicacao.VerificarHash(
                 dto.SenhaAtual,
@@ -71,7 +73,7 @@ namespace ProjetoBackend.Aplicacao.Usuarios.Aplicacao
             );
 
             if (!senhaValida)
-                throw new Exception("Senha atual incorreta.");
+                throw new RegraDeNegocioException("Senha atual incorreta.");
 
             var novaSenhaHash = _senhahashAplicacao.GerarHash(dto.NovaSenha);
 
@@ -88,7 +90,7 @@ namespace ProjetoBackend.Aplicacao.Usuarios.Aplicacao
             var usuario = await _usuarioRepositorio.ObterPorID(usuarioId);
 
             if (usuario == null)
-                throw new Exception("Usuário não encontrado.");
+                throw new NaoEncontradoException("Usuário não encontrado.");
 
             await _usuarioRepositorio.DeletarUsuario(usuarioId);
         }

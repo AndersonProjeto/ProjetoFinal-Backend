@@ -97,6 +97,9 @@ namespace ProjetoBackend.Repositorio.Migrations
                         .HasColumnType("nvarchar(150)")
                         .HasColumnName("Nome");
 
+                    b.Property<string>("VideoUrl")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("ExercicioId");
 
                     b.ToTable("Exercicios", (string)null);

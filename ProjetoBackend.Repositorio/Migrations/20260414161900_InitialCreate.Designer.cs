@@ -12,8 +12,8 @@ using ProjetoBackend.Repositorio.Contexto;
 namespace ProjetoBackend.Repositorio.Migrations
 {
     [DbContext(typeof(ProjetoContexto))]
-    [Migration("20260409035834_Nome")]
-    partial class Nome
+    [Migration("20260414161900_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -99,6 +99,9 @@ namespace ProjetoBackend.Repositorio.Migrations
                         .HasMaxLength(150)
                         .HasColumnType("nvarchar(150)")
                         .HasColumnName("Nome");
+
+                    b.Property<string>("VideoUrl")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ExercicioId");
 

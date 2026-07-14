@@ -10,6 +10,9 @@ namespace ProjetoBackend.Aplicacao.Usuarios.Aplicacao
 {
     public class JwtAplicacao : IJwtAplicacao
     {
+        // Fonte única da validade do token (usada também na resposta do login).
+        public const int HorasParaExpirar = 2;
+
         private readonly IConfiguration _configuration;
         public JwtAplicacao(IConfiguration configuration)
         {
@@ -35,7 +38,7 @@ namespace ProjetoBackend.Aplicacao.Usuarios.Aplicacao
                 issuer: _configuration["Jwt:Issuer"],
                 audience: _configuration["Jwt:Audience"],
                 claims: claims,
-                expires: DateTime.UtcNow.AddHours(2),
+                expires: DateTime.UtcNow.AddHours(HorasParaExpirar),
                 signingCredentials: creds
             );
 

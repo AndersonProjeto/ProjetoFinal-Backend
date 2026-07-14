@@ -4,6 +4,8 @@ using ProjetoBackend.Dominio.DTOs.Evolucao;
 using ProjetoBackend.Dominio.Entidade;
 using ProjetoBackend.Repositorio.Interfaces;
 
+using ProjetoBackend.Dominio.Excecoes;
+
 namespace ProjetoBackend.Aplicacao.EvolucaoAplicacao.Aplicacao
 {
     public class EvolucaoAplicacao : IEvolucaoAplicacao
@@ -34,7 +36,7 @@ namespace ProjetoBackend.Aplicacao.EvolucaoAplicacao.Aplicacao
             var evolucaoExistente = await _evolucaoRepositorio.ObterPorId(atualizarEvolucaoDTO.EvolucaoId);
 
             if (evolucaoExistente == null)
-                throw new Exception("Evolução não encontrada.");
+                throw new NaoEncontradoException("Evolução não encontrada.");
 
             evolucaoExistente.Atualizar(
                 atualizarEvolucaoDTO.PesoKg,

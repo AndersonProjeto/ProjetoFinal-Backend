@@ -6,9 +6,9 @@
         public int TreinoId { get; set; }
         public int ExercicioId { get; set; }
 
-        public string NomeExercicio { get; set; }
-        public string GrupoMuscular { get; set; }
-        public string Equipamento { get; set; }
+        public string NomeExercicio { get; set; } = string.Empty;
+        public string GrupoMuscular { get; set; } = string.Empty;
+        public string Equipamento { get; set; } = string.Empty;
         public string? Descricao { get; set; }
         public int Series { get; set; }
         public int Repeticoes { get; set; }

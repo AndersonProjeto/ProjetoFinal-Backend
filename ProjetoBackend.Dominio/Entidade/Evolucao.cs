@@ -12,7 +12,7 @@
 
         public DateTime DataRegistro { get; private set; }
 
-        public Usuario Usuario { get; private set; }
+        public Usuario Usuario { get; private set; } = null!;
 
         protected Evolucao() { }
 

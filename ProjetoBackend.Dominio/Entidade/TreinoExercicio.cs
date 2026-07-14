@@ -11,8 +11,8 @@
         public int Repeticoes { get; private set; }
         public int DescansoSegundos { get; private set; }
 
-        public Treino Treino { get; private set; }
-        public Exercicio Exercicio { get; private set; }
+        public Treino Treino { get; private set; } = null!;
+        public Exercicio Exercicio { get; private set; } = null!;
 
         protected TreinoExercicio() { }
 

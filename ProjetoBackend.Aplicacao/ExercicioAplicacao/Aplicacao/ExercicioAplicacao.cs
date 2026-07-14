@@ -4,6 +4,8 @@ using ProjetoBackend.Dominio.DTOs.Exercicio;
 using ProjetoBackend.Dominio.Enum;
 using ProjetoBackend.Repositorio.Interfaces;
 
+using ProjetoBackend.Dominio.Excecoes;
+
 namespace ProjetoBackend.Aplicacao.Exercicio.Aplicacao
 {
     public class ExercicioAplicacao : IExercicioAplicacao
@@ -34,7 +36,7 @@ namespace ProjetoBackend.Aplicacao.Exercicio.Aplicacao
             var exercicioExistente = await _exercicioRepositorio.ObterPorID(dto.ExercicioId);
 
             if (exercicioExistente == null)
-                throw new Exception("Exercício não encontrado.");
+                throw new NaoEncontradoException("Exercício não encontrado.");
 
             exercicioExistente.Atualizar(
                 dto.Nome,
@@ -53,7 +55,7 @@ namespace ProjetoBackend.Aplicacao.Exercicio.Aplicacao
             var exercicio = await _exercicioRepositorio.ObterPorID(exercicioId);
 
             if (exercicio == null)
-                throw new Exception("Exercício não encontrado.");
+                throw new NaoEncontradoException("Exercício não encontrado.");
 
             await _exercicioRepositorio.DeletarExercicio(exercicioId);
         }
@@ -71,7 +73,7 @@ namespace ProjetoBackend.Aplicacao.Exercicio.Aplicacao
             var exercicio = await _exercicioRepositorio.ObterPorID(exercicioId);
 
             if (exercicio == null)
-                throw new Exception("Exercício não encontrado.");
+                throw new NaoEncontradoException("Exercício não encontrado.");
 
             return await _exercicioRepositorio.ObterPorID(exercicioId);
         }

@@ -4,6 +4,8 @@ using ProjetoBackend.Dominio.DTOs.TreinoExercicio;
 using ProjetoBackend.Dominio.Entidade;
 using ProjetoBackend.Repositorio.Interfaces;
 
+using ProjetoBackend.Dominio.Excecoes;
+
 namespace ProjetoBackend.Aplicacao.TreinoExercicioAplicacao.Aplicacao
 {
     public class TreinoExercicioAplicacao : ITreinoExercicioAplicacao
@@ -33,7 +35,7 @@ namespace ProjetoBackend.Aplicacao.TreinoExercicioAplicacao.Aplicacao
             var treinoExercicio = await _treinoExercicioRepositorio.ObterPorID(dto.TreinoExercicioId);
 
             if (treinoExercicio == null)
-                throw new Exception("Vínculo de exercício não encontrado para atualização.");
+                throw new NaoEncontradoException("Vínculo de exercício não encontrado para atualização.");
 
             treinoExercicio.AtualizarDados(
                 dto.Series,
@@ -49,7 +51,7 @@ namespace ProjetoBackend.Aplicacao.TreinoExercicioAplicacao.Aplicacao
             var treinoExercicio = await _treinoExercicioRepositorio.ObterPorID(treinoExercicioId);
 
             if (treinoExercicio == null)
-                throw new Exception("O registro informado não existe.");
+                throw new NaoEncontradoException("O registro informado não existe.");
 
             await _treinoExercicioRepositorio.DeletarTreinoExercicio(treinoExercicioId);
         }
@@ -67,7 +69,7 @@ namespace ProjetoBackend.Aplicacao.TreinoExercicioAplicacao.Aplicacao
             var treinoExercicio = await _treinoExercicioRepositorio.ObterPorID(treinoExercicioId);
 
             if (treinoExercicio == null)
-                throw new Exception("TreinoExercicio não encontrado.");
+                throw new NaoEncontradoException("TreinoExercicio não encontrado.");
 
             return treinoExercicio;
         }

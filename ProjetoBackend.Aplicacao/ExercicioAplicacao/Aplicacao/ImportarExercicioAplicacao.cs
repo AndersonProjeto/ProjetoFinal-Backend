@@ -1,4 +1,5 @@
 ﻿using ProjetoBackend.Aplicacao.ExercicioAplicacao.Aplicacao;
+using ProjetoBackend.Dominio.Excecoes;
 using ProjetoBackend.Repositorio.Interfaces;
 
 public class ImportacaoExercicioAplicacao
@@ -19,7 +20,7 @@ public class ImportacaoExercicioAplicacao
         var exercicio = await _exercicioRepositorio.ObterPorID(exercicioId);
 
         if (exercicio == null)
-            throw new Exception("Exercício não encontrado");
+            throw new NaoEncontradoException("Exercício não encontrado");
 
         if (!string.IsNullOrEmpty(exercicio.ImagemUrl))
             return;

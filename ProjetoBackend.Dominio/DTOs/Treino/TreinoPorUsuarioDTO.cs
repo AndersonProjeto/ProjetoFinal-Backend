@@ -7,7 +7,7 @@ namespace ProjetoBackend.Aplicacao.DTOs.Treino
     public class TreinoPorUsuarioDTO
     {
         public  int TreinoId { get; set; }
-        public string NomeTreino { get; set; }
+        public string NomeTreino { get; set; } = string.Empty;
         public DateTime DataCriacao { get; set; }
     }
 }
