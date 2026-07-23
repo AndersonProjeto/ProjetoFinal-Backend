@@ -4,7 +4,7 @@ using System.Text;
 
 namespace ProjetoBackend.Aplicacao.Seguranca
 {
-    public class SenhaHashAplicacao : ISenhahashAplicacao
+    public class SenhaHashAplicacao : ISenhaHashAplicacao
     {
         public string GerarHash(string senha)
         {

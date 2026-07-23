@@ -1,129 +1,95 @@
-﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using ProjetoBackend.API.Extensoes;
 using ProjetoBackend.API.Validadores;
 using ProjetoBackend.Aplicacao.DTOs.Usuario;
 using ProjetoBackend.Aplicacao.Login;
 using ProjetoBackend.Aplicacao.Login.DTO;
+using ProjetoBackend.Aplicacao.Login.Interface;
 using ProjetoBackend.Aplicacao.Usuarios.Interfaces;
 using ProjetoBackend.Dominio.DTOs.Usuario;
-using System.ComponentModel.DataAnnotations;
 
 namespace ProjetoBackend.API.Controllers.Usuario
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class UsuariosController : ControllerBase
     {
         private readonly IUsuarioAplicacao _usuarioAplicacao;
-        private readonly LoginAutorizacaoAplicacao _loginAplicacao;
+        private readonly ILoginAutorizacaoAplicacao _loginAplicacao;
 
-        public UsuariosController(IUsuarioAplicacao usuarioAplicacao, LoginAutorizacaoAplicacao loginAplicacao)
+        public UsuariosController(IUsuarioAplicacao usuarioAplicacao, ILoginAutorizacaoAplicacao loginAplicacao)
         {
             _usuarioAplicacao = usuarioAplicacao;
             _loginAplicacao = loginAplicacao;
         }
+
         [AllowAnonymous]
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginDTO loginDto)
         {
-            try
-            {
-                var resposta = await _loginAplicacao.Login(loginDto);
-                return Ok(resposta);
-            }
-            catch (Exception ex)
-            {
-                return Unauthorized(new { mensagem = ex.Message });
-            }
+            var resposta = await _loginAplicacao.Login(loginDto);
+            return Ok(resposta);
         }
+
         [AllowAnonymous]
         [HttpPost("registrar")]
         public async Task<IActionResult> Adicionar([FromBody] AdicionarUsuarioDTO dto)
         {
-            try
+            var resultado = new UsuarioValidador().Validate(dto);
+            if (!resultado.IsValid)
             {
-                var validator = new UsuarioValidador();
-                var resultado = validator.Validate(dto);
-
-                if (!resultado.IsValid)
+                var erros = resultado.Errors.Select(e => new
                 {
-                    var erros = resultado.Errors.Select(e => new
-                    {
-                        campo = e.PropertyName,
-                        erro = e.ErrorMessage
-                    });
+                    campo = e.PropertyName,
+                    erro = e.ErrorMessage
+                });
 
-                    return BadRequest(new { erros });
-                }
+                return BadRequest(new { erros });
+            }
 
-                var id = await _usuarioAplicacao.AdicionarUsuario(dto);
-                return CreatedAtAction(nameof(ObterPorId), new { usuarioId = id }, dto);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(new { mensagem = ex.Message });
-            }
+            var id = await _usuarioAplicacao.AdicionarUsuario(dto);
+            return CreatedAtAction(nameof(ObterPorId), new { usuarioId = id }, new { usuarioId = id });
         }
+
         [HttpGet("{usuarioId}")]
-        [Authorize]
         public async Task<IActionResult> ObterPorId(int usuarioId)
         {
-            try
-            {
-                var usuario = await _usuarioAplicacao.ObterId(usuarioId);
-                if (usuario == null) return NotFound();
+            User.GarantirDonoDoRecurso(usuarioId);
 
-                return Ok(usuario);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(new { mensagem = ex.Message });
-            }
+            var usuario = await _usuarioAplicacao.ObterId(usuarioId);
+            if (usuario == null) return NotFound();
+
+            return Ok(usuario);
         }
 
         [HttpPut]
-        [Authorize]
         public async Task<IActionResult> Atualizar([FromBody] AtualizarUsuarioDTO dto)
         {
-            try
-            {
-                await _usuarioAplicacao.AtualizarUsuario(dto);
-                return NoContent();
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(new { mensagem = ex.Message });
-            }
+            // A identidade vem do token, não do corpo da requisição.
+            dto.UsuarioId = User.ObterUsuarioId();
+
+            await _usuarioAplicacao.AtualizarUsuario(dto);
+            return NoContent();
         }
 
         [HttpPatch("alterar-senha")]
-        [Authorize]
         public async Task<IActionResult> AlterarSenha([FromBody] AlterarSenhaDTO dto)
         {
-            try
-            {
-                await _usuarioAplicacao.AlterarSenha(dto);
-                return Ok(new { mensagem = "Senha alterada com sucesso!" });
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(new { mensagem = ex.Message });
-            }
+            dto.UsuarioId = User.ObterUsuarioId();
+
+            await _usuarioAplicacao.AlterarSenha(dto);
+            return Ok(new { mensagem = "Senha alterada com sucesso!" });
         }
 
         [HttpDelete("{id}")]
-        [Authorize]
         public async Task<IActionResult> Deletar(int id)
         {
-            try
-            {
-                await _usuarioAplicacao.DeletarUsuario(id);
-                return NoContent();
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(new { mensagem = ex.Message });
-            }
+            User.GarantirDonoDoRecurso(id);
+
+            await _usuarioAplicacao.DeletarUsuario(id);
+            return NoContent();
         }
     }
 }

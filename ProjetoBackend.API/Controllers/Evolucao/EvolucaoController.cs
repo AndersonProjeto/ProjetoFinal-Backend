@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using ProjetoBackend.API.Extensoes;
 using ProjetoBackend.Aplicacao.EvolucaoAplicacao.Interface;
 using ProjetoBackend.Aplicacao.ExercicioAplicacao.Aplicacao;
 using ProjetoBackend.Dominio.DTOs.Evolucao;
@@ -25,6 +26,9 @@ namespace ProjetoBackend.API.Controllers.Evolucao
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
+            // A identidade vem do token, não do corpo da requisição.
+            dto.UsuarioId = User.ObterUsuarioId();
+
             var evolucaoId = await _evolucaoAplicacao.AdicionarEvolucao(dto);
 
             return CreatedAtAction(
@@ -40,6 +44,8 @@ namespace ProjetoBackend.API.Controllers.Evolucao
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
+            dto.UsuarioId = User.ObterUsuarioId();
+
             await _evolucaoAplicacao.AtualizarEvolucao(dto);
 
             return NoContent();
@@ -48,6 +54,8 @@ namespace ProjetoBackend.API.Controllers.Evolucao
         [HttpGet("usuario/{usuarioId}/ultima")]
         public async Task<IActionResult> ObterUltimaEvolucao(int usuarioId)
         {
+            User.GarantirDonoDoRecurso(usuarioId);
+
             var evolucao = await _evolucaoAplicacao.ObterUltimaEvolucao(usuarioId);
 
             if (evolucao == null)
@@ -59,6 +67,8 @@ namespace ProjetoBackend.API.Controllers.Evolucao
         [HttpGet("usuario/{usuarioId}/resumo")]
         public async Task<IActionResult> ResumoEvolucao(int usuarioId)
         {
+            User.GarantirDonoDoRecurso(usuarioId);
+
             var resumo = await _evolucaoAplicacao.ResumoEvolucao(usuarioId);
             return Ok(resumo);
         }
@@ -66,6 +76,8 @@ namespace ProjetoBackend.API.Controllers.Evolucao
         [HttpGet("usuario/{usuarioId}/historico")]
         public async Task<IActionResult> HistoricoDeEvolucao(int usuarioId)
         {
+            User.GarantirDonoDoRecurso(usuarioId);
+
             var historico = await _evolucaoAplicacao.HistoricoDeEvolucaoDoUsuario(usuarioId);
             return Ok(historico);
         }
@@ -73,6 +85,8 @@ namespace ProjetoBackend.API.Controllers.Evolucao
         [HttpGet("usuario/{usuarioId}/peso-inicial")]
         public async Task<IActionResult> ObterPesoInicial(int usuarioId)
         {
+            User.GarantirDonoDoRecurso(usuarioId);
+
             var pesoInicial = await _evolucaoAplicacao.ObterPesoInicial(usuarioId);
             return Ok(pesoInicial);
         }
@@ -80,12 +94,16 @@ namespace ProjetoBackend.API.Controllers.Evolucao
         [HttpGet("usuario/{usuarioId}/diferenca-peso")]
         public async Task<IActionResult> ObterDiferencaPeso(int usuarioId)
         {
+            User.GarantirDonoDoRecurso(usuarioId);
+
             var diferenca = await _evolucaoAplicacao.ObterDiferencaPeso(usuarioId);
             return Ok(diferenca);
         }
         [HttpGet("usuario/{usuarioId}/cintura-inicial")]
         public async Task<IActionResult> ObterCinturaInicial(int usuarioId)
         {
+            User.GarantirDonoDoRecurso(usuarioId);
+
             var cinturaInicial = await _evolucaoAplicacao.ObterCinturaInicial(usuarioId);
             return Ok(cinturaInicial);
         }
@@ -93,6 +111,8 @@ namespace ProjetoBackend.API.Controllers.Evolucao
         [HttpGet("usuario/{usuarioId}/diferenca-cintura")]
         public async Task<IActionResult> ObterDiferencaCintura(int usuarioId)
         {
+            User.GarantirDonoDoRecurso(usuarioId);
+
             var diferenca = await _evolucaoAplicacao.ObterDiferencaCintura(usuarioId);
             return Ok(diferenca);
         }
@@ -100,6 +120,8 @@ namespace ProjetoBackend.API.Controllers.Evolucao
         [HttpGet("usuario/{usuarioId}/braco-inicial")]
         public async Task<IActionResult> ObterBracoInicial(int usuarioId)
         {
+            User.GarantirDonoDoRecurso(usuarioId);
+
             var bracoInicial = await _evolucaoAplicacao.ObterBracoInicial(usuarioId);
             return Ok(bracoInicial);
         }
@@ -107,6 +129,8 @@ namespace ProjetoBackend.API.Controllers.Evolucao
         [HttpGet("usuario/{usuarioId}/diferenca-braco")]
         public async Task<IActionResult> ObterDiferencaBraco(int usuarioId)
         {
+            User.GarantirDonoDoRecurso(usuarioId);
+
             var diferenca = await _evolucaoAplicacao.ObterDiferencaBraco(usuarioId);
             return Ok(diferenca);
         }
@@ -114,6 +138,8 @@ namespace ProjetoBackend.API.Controllers.Evolucao
         [HttpGet("usuario/{usuarioId}/coxa-inicial")]
         public async Task<IActionResult> ObterCoxaInicial(int usuarioId)
         {
+            User.GarantirDonoDoRecurso(usuarioId);
+
             var coxaInicial = await _evolucaoAplicacao.ObterCoxaInicial(usuarioId);
             return Ok(coxaInicial);
         }
@@ -121,6 +147,8 @@ namespace ProjetoBackend.API.Controllers.Evolucao
         [HttpGet("usuario/{usuarioId}/diferenca-coxa")]
         public async Task<IActionResult> ObterDiferencaCoxa(int usuarioId)
         {
+            User.GarantirDonoDoRecurso(usuarioId);
+
             var diferenca = await _evolucaoAplicacao.ObterDiferencaCoxa(usuarioId);
             return Ok(diferenca);
         }

@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace ProjetoBackend.Services.DtoService
 {
     public class GitHubResponse
     {
-        public List<Choice> Choices { get; set; }
+        public List<Choice> Choices { get; set; } = new();
     }
 }

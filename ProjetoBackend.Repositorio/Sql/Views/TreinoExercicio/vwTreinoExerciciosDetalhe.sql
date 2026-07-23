@@ -8,6 +8,7 @@ SELECT
     e.Nome AS NomeExercicio,
     e.GrupoMuscular,
     e.Equipamento,
+    e.Descricao,
     te.Series,
     te.Repeticoes,
     te.DescansoSegundos

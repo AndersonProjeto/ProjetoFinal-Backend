@@ -3,8 +3,8 @@
     public class UsuarioResumoDto
     {
         public int UsuarioId { get; set; }
-        public string Nome { get; set; }
-        public string Email { get; set; }
+        public string Nome { get; set; } = string.Empty;
+        public string Email { get; set; } = string.Empty;
         public decimal AlturaCm { get; set; }
         public decimal? PesoKg { get; set; }
         public int Idade { get; set; }

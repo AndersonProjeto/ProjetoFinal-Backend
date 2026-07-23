@@ -7,6 +7,8 @@ using System.Net.Http.Json;
 using System.Text;
 using System.Threading.Tasks;
 
+using ProjetoBackend.Dominio.Excecoes;
+
 namespace ProjetoBackend.Aplicacao.ExercicioAplicacao.Aplicacao
 {
     public class ExerciseDbService
@@ -33,7 +35,7 @@ namespace ProjetoBackend.Aplicacao.ExercicioAplicacao.Aplicacao
         private static string ConverterGrupoMuscular(EnumGrupoMuscular grupoMuscular)
         {
             if (!MapaGrupoMuscular.TryGetValue(grupoMuscular, out var grupoEn))
-                throw new Exception("Grupo muscular não mapeado.");
+                throw new RegraDeNegocioException("Grupo muscular não mapeado.");
 
             return grupoEn;
         }
@@ -45,7 +47,7 @@ namespace ProjetoBackend.Aplicacao.ExercicioAplicacao.Aplicacao
             var response = await _httpClient.GetAsync($"/api/v1/exercises/search?search={grupoEn}");
 
             if (!response.IsSuccessStatusCode)
-                throw new Exception($"Erro ao buscar imagem: {response.StatusCode}");
+                throw new RegraDeNegocioException($"Erro ao buscar imagem: {response.StatusCode}");
 
             var data = await response.Content.ReadFromJsonAsync<ExerciseAscendResponse>();
 

@@ -4,11 +4,11 @@
     {
         public int TreinoId { get; private set; }
         public int UsuarioId { get; private set; }
-        public string NomeTreino { get; private set; }
+        public string NomeTreino { get; private set; } = string.Empty;
         public DateTime DataCriacao { get; private set; }
 
-        public Usuario Usuario { get; private set; }
-        public ICollection<TreinoExercicio> TreinoExercicios { get; private set; }
+        public Usuario Usuario { get; private set; } = null!;
+        public ICollection<TreinoExercicio> TreinoExercicios { get; private set; } = new List<TreinoExercicio>();
 
         protected Treino() { }
 

@@ -76,12 +76,14 @@ namespace ProjetoBackend.Repositorio
             );
         }
 
-        public async Task<IEnumerable<TreinoResumoDTO>> ObterResumoTreinos()
+        public async Task<IEnumerable<TreinoResumoDTO>> ObterResumoTreinos(int usuarioId)
         {
             using var conn = CriarConexao();
 
+            // Filtra na origem: sem o WHERE, a view devolve os treinos de todos os usuários.
             return await conn.QueryAsync<TreinoResumoDTO>(
-                "SELECT * FROM vwTreinoResumo"
+                "SELECT * FROM vwTreinoResumo WHERE UsuarioId = @UsuarioId",
+                new { UsuarioId = usuarioId }
             );
         }
 
@@ -102,6 +104,15 @@ namespace ProjetoBackend.Repositorio
             return await conn.ExecuteScalarAsync<int>(
                 "SELECT dbo.fnTreinoTotalUsuario(@UsuarioId)",
                 new { UsuarioId = usuarioId }
+            );
+        }
+        public async Task<IEnumerable<Treino>> ListarEntidadesPorUsuario(int usuarioId)
+        {
+            using var conn = CriarConexao();
+            return await conn.QueryAsync<Treino>(
+                "spTreinoListarPorUsuario",
+                new { UsuarioId = usuarioId },
+                commandType: CommandType.StoredProcedure
             );
         }
     }

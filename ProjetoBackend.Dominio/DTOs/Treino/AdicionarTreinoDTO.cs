@@ -7,6 +7,6 @@ namespace ProjetoBackend.Dominio.DTOs.Treino
     public class AdicionarTreinoDTO
     {
         public int UsuarioId { get; set; }
-        public string NomeTreino { get; set; }
+        public string NomeTreino { get; set; } = string.Empty;
     }
 }

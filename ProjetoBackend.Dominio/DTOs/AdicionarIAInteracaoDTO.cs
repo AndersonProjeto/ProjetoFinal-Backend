@@ -9,7 +9,7 @@ namespace ProjetoBackend.Dominio.DTOs
     public class AdicionarIAInteracaoDTO
     {
         public int UsuarioId { get; set; }
-        public string Pergunta { get; set; }
-        public string Resposta { get; set; }
+        public string Pergunta { get; set; } = string.Empty;
+        public string Resposta { get; set; } = string.Empty;
     }
 }

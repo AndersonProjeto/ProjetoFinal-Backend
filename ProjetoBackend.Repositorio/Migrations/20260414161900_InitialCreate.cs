@@ -20,8 +20,9 @@ namespace ProjetoBackend.Repositorio.Migrations
                     Nome = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
                     GrupoMuscular = table.Column<int>(type: "int", maxLength: 80, nullable: false),
                     Equipamento = table.Column<string>(type: "nvarchar(80)", maxLength: 80, nullable: false),
-                    Descricao = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true),
-                    ImagemUrl = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    Descricao = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ImagemUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    VideoUrl = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -95,6 +96,27 @@ namespace ProjetoBackend.Repositorio.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "IARelatorio",
+                columns: table => new
+                {
+                    IARelatorioId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UsuarioId = table.Column<int>(type: "int", nullable: false),
+                    Relatorio = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    DataGerado = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_IARelatorio", x => x.IARelatorioId);
+                    table.ForeignKey(
+                        name: "FK_IARelatorio_Usuarios_UsuarioId",
+                        column: x => x.UsuarioId,
+                        principalTable: "Usuarios",
+                        principalColumn: "UsuarioId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Treinos",
                 columns: table => new
                 {
@@ -160,6 +182,11 @@ namespace ProjetoBackend.Repositorio.Migrations
                 column: "UsuarioId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_IARelatorio_UsuarioId",
+                table: "IARelatorio",
+                column: "UsuarioId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_TreinoExercicios_ExercicioId",
                 table: "TreinoExercicios",
                 column: "ExercicioId");
@@ -189,6 +216,9 @@ namespace ProjetoBackend.Repositorio.Migrations
 
             migrationBuilder.DropTable(
                 name: "IAInteracoes");
+
+            migrationBuilder.DropTable(
+                name: "IARelatorio");
 
             migrationBuilder.DropTable(
                 name: "TreinoExercicios");

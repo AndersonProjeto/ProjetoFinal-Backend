@@ -4,7 +4,7 @@ using System.Text;
 
 namespace ProjetoBackend.Aplicacao.Seguranca
 {
-    public interface ISenhahashAplicacao
+    public interface ISenhaHashAplicacao
     {
         string GerarHash(string senha);
         bool VerificarHash(string senha, string hash);

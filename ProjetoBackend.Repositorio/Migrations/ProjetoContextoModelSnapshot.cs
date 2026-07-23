@@ -74,8 +74,7 @@ namespace ProjetoBackend.Repositorio.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ExercicioId"));
 
                     b.Property<string>("Descricao")
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)")
+                        .HasColumnType("nvarchar(max)")
                         .HasColumnName("Descricao");
 
                     b.Property<string>("Equipamento")
@@ -97,6 +96,9 @@ namespace ProjetoBackend.Repositorio.Migrations
                         .HasMaxLength(150)
                         .HasColumnType("nvarchar(150)")
                         .HasColumnName("Nome");
+
+                    b.Property<string>("VideoUrl")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ExercicioId");
 
@@ -136,6 +138,31 @@ namespace ProjetoBackend.Repositorio.Migrations
                     b.HasIndex("UsuarioId");
 
                     b.ToTable("IAInteracoes", (string)null);
+                });
+
+            modelBuilder.Entity("ProjetoBackend.Dominio.Entidade.IARelatorio", b =>
+                {
+                    b.Property<int>("IARelatorioId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IARelatorioId"));
+
+                    b.Property<DateTime>("DataGerado")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Relatorio")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UsuarioId")
+                        .HasColumnType("int");
+
+                    b.HasKey("IARelatorioId");
+
+                    b.HasIndex("UsuarioId");
+
+                    b.ToTable("IARelatorio");
                 });
 
             modelBuilder.Entity("ProjetoBackend.Dominio.Entidade.Treino", b =>
@@ -288,6 +315,17 @@ namespace ProjetoBackend.Repositorio.Migrations
                     b.Navigation("Usuario");
                 });
 
+            modelBuilder.Entity("ProjetoBackend.Dominio.Entidade.IARelatorio", b =>
+                {
+                    b.HasOne("ProjetoBackend.Dominio.Entidade.Usuario", "Usuario")
+                        .WithMany("IARelatorios")
+                        .HasForeignKey("UsuarioId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Usuario");
+                });
+
             modelBuilder.Entity("ProjetoBackend.Dominio.Entidade.Treino", b =>
                 {
                     b.HasOne("ProjetoBackend.Dominio.Entidade.Usuario", "Usuario")
@@ -333,6 +371,8 @@ namespace ProjetoBackend.Repositorio.Migrations
                     b.Navigation("Evolucoes");
 
                     b.Navigation("IAInteracoes");
+
+                    b.Navigation("IARelatorios");
 
                     b.Navigation("Treinos");
                 });

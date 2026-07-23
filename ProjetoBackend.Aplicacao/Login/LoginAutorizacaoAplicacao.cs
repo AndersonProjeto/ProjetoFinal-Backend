@@ -1,44 +1,41 @@
 ﻿using ProjetoBackend.Aplicacao.Login.DTO;
 using ProjetoBackend.Aplicacao.Login.Interface;
 using ProjetoBackend.Aplicacao.Seguranca;
+using ProjetoBackend.Aplicacao.Usuarios.Aplicacao;
+using ProjetoBackend.Dominio.Excecoes;
 using ProjetoBackend.Repositorio.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace ProjetoBackend.Aplicacao.Login
 {
-    public class LoginAutorizacaoAplicacao
+    public class LoginAutorizacaoAplicacao : ILoginAutorizacaoAplicacao
     {
         private readonly IUsuarioRepositorio _usuarioRepositorio;
-        private readonly ISenhahashAplicacao _senhahashAplicacao;
+        private readonly ISenhaHashAplicacao _senhahashAplicacao;
         private readonly IJwtAplicacao _jwtAplicacao;
 
-        public LoginAutorizacaoAplicacao(IUsuarioRepositorio usuarioRepositorio, ISenhahashAplicacao senhahashAplicacao, IJwtAplicacao jwtAplicacao)
+        public LoginAutorizacaoAplicacao(IUsuarioRepositorio usuarioRepositorio, ISenhaHashAplicacao senhahashAplicacao, IJwtAplicacao jwtAplicacao)
         {
             _usuarioRepositorio = usuarioRepositorio;
             _senhahashAplicacao = senhahashAplicacao;
             _jwtAplicacao = jwtAplicacao;
         }
-        public async Task<LoginRespostaDTO> Login (LoginDTO loginDTO)
+        public async Task<LoginRespostaDTO> Login(LoginDTO loginDTO)
         {
-            var usuario = await _usuarioRepositorio.ObterPorEmail(loginDTO.Email);
-            if (usuario == null)
-            {
-                throw new Exception("Usuário não encontrado.");
-            }
+            // Mensagem única para email inexistente e senha errada:
+            // não revelar a um atacante quais emails estão cadastrados.
+            var usuario = await _usuarioRepositorio.ObterPorEmail(loginDTO.Email)
+                ?? throw new CredenciaisInvalidasException("Email ou senha inválidos.");
+
             var senhaValida = _senhahashAplicacao.VerificarHash(loginDTO.Senha, usuario.SenhaHash);
             if (!senhaValida)
-            {
-                throw new Exception("Senha inválida.");
-            }
+                throw new CredenciaisInvalidasException("Email ou senha inválidos.");
+
             var token = _jwtAplicacao.GerarToken(usuario);
             return new LoginRespostaDTO
             {
                 Token = token,
-                TempoDeExpirarOToken = DateTime.UtcNow.AddHours(2),
-                 UsuarioId = usuario.UsuarioId
-
+                TempoDeExpirarOToken = DateTime.UtcNow.AddHours(JwtAplicacao.HorasParaExpirar),
+                UsuarioId = usuario.UsuarioId
             };
         }
     }

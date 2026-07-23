@@ -35,6 +35,7 @@
     <Folder Include="Sql\Functions\TreinoExercicio\" />
     <Folder Include="Sql\Functions\Treino\" />
     <Folder Include="Sql\StoredProcedores\Evolucao\" />
+    <Folder Include="Sql\StoredProcedores\IARelatorios\" />
     <Folder Include="Sql\Views\IAInteracao\" />
     <Folder Include="Sql\Views\Treino\" />
   </ItemGroup>

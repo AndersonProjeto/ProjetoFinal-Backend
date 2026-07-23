@@ -4,6 +4,8 @@ using ProjetoBackend.Dominio.DTOs.Treino;
 using ProjetoBackend.Dominio.Entidade;
 using ProjetoBackend.Repositorio.Interfaces;
 
+using ProjetoBackend.Dominio.Excecoes;
+
 namespace ProjetoBackend.Aplicacao.Treino.Aplicacao
 {
     public class TreinoAplicacao : ITreinoAplicacao
@@ -23,7 +25,7 @@ namespace ProjetoBackend.Aplicacao.Treino.Aplicacao
             var usuario = await _usuarioRepositorio.ObterPorID(dto.UsuarioId);
             if (usuario == null)
             {
-                throw new Exception("Usuário não encontrado. Não é possível criar um treino.");
+                throw new NaoEncontradoException("Usuário não encontrado. Não é possível criar um treino.");
             }
 
            
@@ -42,7 +44,7 @@ namespace ProjetoBackend.Aplicacao.Treino.Aplicacao
                  
             if (treinoExistente == null)
             {
-                throw new Exception("Treino não encontrado.");
+                throw new NaoEncontradoException("Treino não encontrado.");
             }
            treinoExistente.AtualizarNome(dto.NomeTreino);
             await _treinoRepositorio.AtualizarTreino(treinoExistente);
@@ -53,7 +55,7 @@ namespace ProjetoBackend.Aplicacao.Treino.Aplicacao
             var treino = await _treinoRepositorio.ObterPorId(treinoId);
             if (treino == null)
             {
-                throw new Exception("Treino não encontrado.");
+                throw new NaoEncontradoException("Treino não encontrado.");
             }
 
             await _treinoRepositorio.DeletarTreino(treinoId);
@@ -64,7 +66,7 @@ namespace ProjetoBackend.Aplicacao.Treino.Aplicacao
             var treino = await _treinoRepositorio.ObterPorId(treinoId);
 
             if (treino == null)
-                throw new Exception("Treino não encontrado.");
+                throw new NaoEncontradoException("Treino não encontrado.");
 
             treino.GetType()
                   .GetProperty("DataCriacao")?
@@ -81,7 +83,7 @@ namespace ProjetoBackend.Aplicacao.Treino.Aplicacao
         {
             var usuario = await _usuarioRepositorio.ObterPorID(usuarioId);
             if (usuario == null)
-                throw new Exception("Usuário não encontrado.");
+                throw new NaoEncontradoException("Usuário não encontrado.");
 
             var treinos = await _treinoRepositorio.ListarPorUsuario(usuarioId);
 
@@ -95,9 +97,9 @@ namespace ProjetoBackend.Aplicacao.Treino.Aplicacao
                 )
             });
         }
-        public async Task<IEnumerable<TreinoResumoDTO>> ObterResumoTreinos()
+        public async Task<IEnumerable<TreinoResumoDTO>> ObterResumoTreinos(int usuarioId)
         {
-            var treinos = await _treinoRepositorio.ObterResumoTreinos();
+            var treinos = await _treinoRepositorio.ObterResumoTreinos(usuarioId);
 
             return treinos.Select(t => new TreinoResumoDTO
             {
@@ -117,7 +119,7 @@ namespace ProjetoBackend.Aplicacao.Treino.Aplicacao
              
             if (treino == null)
             {
-                throw new Exception("Treino não encontrado.");
+                throw new NaoEncontradoException("Treino não encontrado.");
             }
             return await _treinoRepositorio.TotalExerciciosDoTreino(treinoId);
         }

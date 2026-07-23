@@ -12,7 +12,7 @@ namespace ProjetoBackend.Aplicacao.TreinoAplicacao.Interface
         Task DeletarTreino(int treinoId);
         Task<ProjetoBackend.Dominio.Entidade.Treino?> ObterPorId(int treinoId);
         Task<IEnumerable<TreinoPorUsuarioDTO>> ListarPorUsuario(int usuarioId);
-        Task<IEnumerable<TreinoResumoDTO>> ObterResumoTreinos();
+        Task<IEnumerable<TreinoResumoDTO>> ObterResumoTreinos(int usuarioId);
         Task<int> ObterTotalExercicios(int treinoId);
     }
 }

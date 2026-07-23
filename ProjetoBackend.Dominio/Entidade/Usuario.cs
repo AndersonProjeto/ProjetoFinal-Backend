@@ -20,7 +20,7 @@ namespace ProjetoBackend.Dominio.Entidade
         public ICollection<Treino> Treinos { get; private set; } = new List<Treino>();
         public ICollection<Evolucao> Evolucoes { get; private set; } = new List<Evolucao>();
         public ICollection<IAInteracao> IAInteracoes { get; private set; } = new List<IAInteracao>();
-
+        public ICollection<IARelatorio> IARelatorios { get; private set; } = new List<IARelatorio>();
         protected Usuario() { }
 
         public Usuario(string nome, string email, string senhaHash, DateTime dataNascimento, decimal alturaCm ,string avatarEstilo,
@@ -42,7 +42,7 @@ namespace ProjetoBackend.Dominio.Entidade
             Treinos = new List<Treino>();
             Evolucoes = new List<Evolucao>();
             IAInteracoes = new List<IAInteracao>();
-
+            IARelatorios = new List<IARelatorio>();
         }
 
         public void AtualizarNome(string nome)

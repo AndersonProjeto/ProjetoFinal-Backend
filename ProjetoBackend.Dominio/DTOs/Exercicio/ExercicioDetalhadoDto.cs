@@ -6,8 +6,9 @@ namespace ProjetoBackend.Dominio.DTOs.Exercicio
     {
         public int ExercicioId { get; set; }
         public string Nome { get; set; } = null!;
-        public EnumGrupoMuscular GrupoMuscular { get; set; } 
+        public EnumGrupoMuscular GrupoMuscular { get; set; }
         public string Equipamento { get; set; } = null!;
+        public string VideoUrl { get; set; } = string.Empty;
 
         public int TotalTreinos { get; set; }
         public int TotalSeries { get; set; }
