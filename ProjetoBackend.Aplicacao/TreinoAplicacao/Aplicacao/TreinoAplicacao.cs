@@ -97,9 +97,9 @@ namespace ProjetoBackend.Aplicacao.Treino.Aplicacao
                 )
             });
         }
-        public async Task<IEnumerable<TreinoResumoDTO>> ObterResumoTreinos()
+        public async Task<IEnumerable<TreinoResumoDTO>> ObterResumoTreinos(int usuarioId)
         {
-            var treinos = await _treinoRepositorio.ObterResumoTreinos();
+            var treinos = await _treinoRepositorio.ObterResumoTreinos(usuarioId);
 
             return treinos.Select(t => new TreinoResumoDTO
             {

@@ -9,7 +9,7 @@ BEGIN
         UsuarioId,
         Relatorio,
         DataGerado
-    FROM IARelatorios
+    FROM IARelatorio
     WHERE UsuarioId = @UsuarioId
     ORDER BY DataGerado DESC;
 END;

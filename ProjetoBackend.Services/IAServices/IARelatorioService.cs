@@ -9,9 +9,11 @@ using Microsoft.Extensions.Configuration;
 
 namespace ProjetoBackend.Services.IAServices
 {
-    public class IARelatorioService(IConfiguration config)
+    // HttpClient vem do IHttpClientFactory (ver ServicosExtensoes): o factory cuida
+    // do pooling e da reciclagem de conexões. O Bearer é configurado no registro.
+    public class IARelatorioService(HttpClient httpClient, IConfiguration config)
     {
-        private readonly HttpClient _httpClient = new();
+        private readonly HttpClient _httpClient = httpClient;
         private readonly IConfiguration _config = config;
         private static readonly JsonSerializerOptions _jsonOptions = new() { PropertyNameCaseInsensitive = true };
 
@@ -231,10 +233,6 @@ namespace ProjetoBackend.Services.IAServices
         private async Task<string> ChamarGroqAsync(string prompt)
         {
             var url = _config["Groq:ApiUrl"];
-            var token = _config["Groq:Token"];
-
-            _httpClient.DefaultRequestHeaders.Authorization =
-                new AuthenticationHeaderValue("Bearer", token);
 
             var requestBody = new
             {

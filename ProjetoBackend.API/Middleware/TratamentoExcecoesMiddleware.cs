@@ -30,6 +30,7 @@ namespace ProjetoBackend.API.Middleware
                 {
                     NaoEncontradoException => (StatusCodes.Status404NotFound, ex.Message),
                     CredenciaisInvalidasException => (StatusCodes.Status401Unauthorized, ex.Message),
+                    AcessoNegadoException => (StatusCodes.Status403Forbidden, ex.Message),
                     RegraDeNegocioException => (StatusCodes.Status400BadRequest, ex.Message),
                     ArgumentException => (StatusCodes.Status400BadRequest, ex.Message),
                     _ => (StatusCodes.Status500InternalServerError, "Ocorreu um erro inesperado. Tente novamente.")

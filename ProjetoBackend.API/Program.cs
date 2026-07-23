@@ -12,6 +12,7 @@ builder.Services.AddDbContext<ProjetoContexto>(options =>
 
 builder.Services
     .AdicionarDependencias()
+    .AdicionarClientesIA(builder.Configuration)
     .AdicionarAutenticacaoJwt(builder.Configuration)
     .AdicionarCorsFrontend(builder.Configuration)
     .AdicionarSwaggerComJwt();

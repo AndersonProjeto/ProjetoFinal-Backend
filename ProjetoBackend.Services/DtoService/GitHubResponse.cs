@@ -1,7 +1,7 @@
-﻿namespace ProjetoBackend.Services.DtoService
+namespace ProjetoBackend.Services.DtoService
 {
     public class GitHubResponse
     {
-        public List<Choice> Choices { get; set; }
+        public List<Choice> Choices { get; set; } = new();
     }
 }

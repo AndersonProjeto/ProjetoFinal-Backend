@@ -14,11 +14,11 @@ namespace ProjetoBackend.Aplicacao.Usuarios.Aplicacao
     public class UsuarioAplicacao : IUsuarioAplicacao
     {
         private readonly IUsuarioRepositorio _usuarioRepositorio;
-        private readonly ISenhahashAplicacao _senhahashAplicacao;
+        private readonly ISenhaHashAplicacao _senhahashAplicacao;
 
         public UsuarioAplicacao(
             IUsuarioRepositorio usuarioRepositorio,
-            ISenhahashAplicacao senhahashAplicacao)
+            ISenhaHashAplicacao senhahashAplicacao)
         {
             _usuarioRepositorio = usuarioRepositorio;
             _senhahashAplicacao = senhahashAplicacao;

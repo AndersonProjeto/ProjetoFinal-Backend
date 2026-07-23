@@ -13,9 +13,9 @@ namespace ProjetoBackend.API.Controllers
     public class ExercicioController : ControllerBase
     {
         private readonly IExercicioAplicacao _exercicioAplicacao;
-        private readonly ImportacaoExercicioAplicacao _importacaoExercicioAplicacao;
+        private readonly IImportacaoExercicioAplicacao _importacaoExercicioAplicacao;
 
-        public ExercicioController(IExercicioAplicacao exercicioAplicacao, ImportacaoExercicioAplicacao importacaoExercicioAplicacao)
+        public ExercicioController(IExercicioAplicacao exercicioAplicacao, IImportacaoExercicioAplicacao importacaoExercicioAplicacao)
         {
             _exercicioAplicacao = exercicioAplicacao;
             _importacaoExercicioAplicacao = importacaoExercicioAplicacao;

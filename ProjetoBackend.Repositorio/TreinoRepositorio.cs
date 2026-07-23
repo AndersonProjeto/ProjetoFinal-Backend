@@ -76,12 +76,14 @@ namespace ProjetoBackend.Repositorio
             );
         }
 
-        public async Task<IEnumerable<TreinoResumoDTO>> ObterResumoTreinos()
+        public async Task<IEnumerable<TreinoResumoDTO>> ObterResumoTreinos(int usuarioId)
         {
             using var conn = CriarConexao();
 
+            // Filtra na origem: sem o WHERE, a view devolve os treinos de todos os usuários.
             return await conn.QueryAsync<TreinoResumoDTO>(
-                "SELECT * FROM vwTreinoResumo"
+                "SELECT * FROM vwTreinoResumo WHERE UsuarioId = @UsuarioId",
+                new { UsuarioId = usuarioId }
             );
         }
 

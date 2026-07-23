@@ -23,6 +23,7 @@ using ProjetoBackend.Repositorio;
 using ProjetoBackend.Repositorio.Interfaces;
 using ProjetoBackend.Repositorio.ProjetoBackend.Repositorio;
 using ProjetoBackend.Services.IAServices;
+using System.Net.Http.Headers;
 using System.Text;
 
 namespace ProjetoBackend.API.Extensoes
@@ -53,15 +54,39 @@ namespace ProjetoBackend.API.Extensoes
 
             services.AddScoped<IIARelatorioRepositorio, IARelatorioRepositorio>();
             services.AddScoped<IIARelatorioAplicacao, IARelatorioAplicacao>();
-            services.AddScoped<IARelatorioService>();
 
-            services.AddScoped<IAService, AiService>();
-
-            services.AddScoped<ISenhahashAplicacao, SenhaHashAplicacao>();
+            services.AddScoped<ISenhaHashAplicacao, SenhaHashAplicacao>();
             services.AddScoped<IJwtAplicacao, JwtAplicacao>();
-            services.AddScoped<LoginAutorizacaoAplicacao>();
+            services.AddScoped<ILoginAutorizacaoAplicacao, LoginAutorizacaoAplicacao>();
 
-            services.AddScoped<ImportacaoExercicioAplicacao>();
+            services.AddScoped<IImportacaoExercicioAplicacao, ImportacaoExercicioAplicacao>();
+
+            return services;
+        }
+
+        /// <summary>
+        /// Registra os clientes HTTP das integrações de IA via IHttpClientFactory.
+        /// O factory recicla as conexões (evita esgotamento de sockets) e o token
+        /// fica no client, não mutado a cada chamada.
+        /// </summary>
+        public static IServiceCollection AdicionarClientesIA(this IServiceCollection services, IConfiguration configuration)
+        {
+            // Chat: resposta curta (max_tokens 500).
+            services.AddHttpClient<IAService, AiService>(client =>
+            {
+                client.Timeout = TimeSpan.FromSeconds(30);
+                client.DefaultRequestHeaders.Authorization =
+                    new AuthenticationHeaderValue("Bearer", configuration["GitHubModels:Token"]);
+                client.DefaultRequestHeaders.UserAgent.ParseAdd("ACADIA");
+            });
+
+            // Relatório: prompt grande e max_tokens 2000, precisa de mais folga.
+            services.AddHttpClient<IARelatorioService>(client =>
+            {
+                client.Timeout = TimeSpan.FromSeconds(60);
+                client.DefaultRequestHeaders.Authorization =
+                    new AuthenticationHeaderValue("Bearer", configuration["Groq:Token"]);
+            });
 
             return services;
         }

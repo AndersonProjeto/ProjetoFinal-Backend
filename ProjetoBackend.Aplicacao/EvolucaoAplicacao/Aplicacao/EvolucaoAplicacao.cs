@@ -59,7 +59,7 @@ namespace ProjetoBackend.Aplicacao.EvolucaoAplicacao.Aplicacao
         public async Task<EvolucaoResumoDTO?> ResumoEvolucao(int usuarioId)
         {
             var resumo = await _evolucaoRepositorio.ResumoEvolucao(usuarioId);
-            if (resumo.IMC != null)
+            if (resumo?.IMC != null)
             {
                 var (classificacao, explicacao) = ImcService.ClassificarImc(resumo.IMC.Value);
                 resumo.ImcClassificacao = classificacao;

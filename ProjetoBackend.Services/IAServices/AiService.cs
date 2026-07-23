@@ -12,18 +12,18 @@ namespace ProjetoBackend.Services.IAServices
         private readonly HttpClient _httpClient;
         private readonly IConfiguration _config;
 
-        public AiService(IConfiguration config)
+        // HttpClient vem do IHttpClientFactory (ver ServicosExtensoes): o factory cuida
+        // do pooling e da reciclagem de conexões. Autenticação e User-Agent são
+        // configurados no registro, não aqui — mutar DefaultRequestHeaders a cada
+        // chamada num client compartilhado é condição de corrida.
+        public AiService(HttpClient httpClient, IConfiguration config)
         {
-            _httpClient = new HttpClient();
+            _httpClient = httpClient;
             _config = config;
         }
         public async Task<string> GetAiResponseAsync(string prompt)
         {
             var url = _config["GitHubModels:ApiUrl"];
-            var token = _config["GitHubModels:Token"];
-
-            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-            _httpClient.DefaultRequestHeaders.UserAgent.ParseAdd("ACADIA");
 
             var requestBody = new
             {

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using ProjetoBackend.API.Extensoes;
 using Microsoft.EntityFrameworkCore;
 using ProjetoBackend.Aplicacao.IAInteracoes.Interfaces;
 using ProjetoBackend.Dominio.DTOs;
@@ -26,6 +27,8 @@ namespace ProjetoBackend.API.Controllers.IAInteracao
         [HttpGet("{usuarioId}")]
         public async Task<IActionResult> ListarPorUsuario(int usuarioId)
         {
+            User.GarantirDonoDoRecurso(usuarioId);
+
             try
             {
                 var interacoes = await _iaInteracaoAplicacao.ListarIAInteracoesPorUsuario(usuarioId);
@@ -40,6 +43,8 @@ namespace ProjetoBackend.API.Controllers.IAInteracao
         [HttpGet("ultima/{usuarioId}")]
         public async Task<IActionResult> ObterUltimaInteracao(int usuarioId)
         {
+            User.GarantirDonoDoRecurso(usuarioId);
+
             try
             {
                 var interacao = await _iaInteracaoAplicacao.ObterUltimaInteracao(usuarioId);
@@ -57,6 +62,8 @@ namespace ProjetoBackend.API.Controllers.IAInteracao
         [HttpGet("ultimas/{usuarioId}/{quantidade}")]
         public async Task<IActionResult> ListarUltimas(int usuarioId, int quantidade)
         {
+            User.GarantirDonoDoRecurso(usuarioId);
+
             try
             {
                 var interacoes = await _iaInteracaoAplicacao.ListarUltimasInteracoes(usuarioId, quantidade);
@@ -71,8 +78,8 @@ namespace ProjetoBackend.API.Controllers.IAInteracao
         [HttpPost("perguntar")]
         public async Task<IActionResult> Perguntar([FromBody] PerguntarParaIADTO dto)
         {
-            if (dto.UsuarioId <= 0)
-                return BadRequest("Usuário inválido.");
+            // A interação é sempre gravada para o dono do token, não para o id enviado.
+            var usuarioId = User.ObterUsuarioId();
 
             if (string.IsNullOrWhiteSpace(dto.Pergunta))
                 return BadRequest("Pergunta obrigatória.");
@@ -80,7 +87,7 @@ namespace ProjetoBackend.API.Controllers.IAInteracao
             var respostaIA = await _aiService.GetAiResponseAsync(dto.Pergunta);
 
             var interacao = new Dominio.Entidade.IAInteracao(
-                dto.UsuarioId,
+                usuarioId,
                 dto.Pergunta,
                 respostaIA
             );

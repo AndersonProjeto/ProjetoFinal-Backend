@@ -75,7 +75,7 @@ namespace ProjetoBackend.Aplicacao.Exercicio.Aplicacao
             if (exercicio == null)
                 throw new NaoEncontradoException("Exercício não encontrado.");
 
-            return await _exercicioRepositorio.ObterPorID(exercicioId);
+            return exercicio;
         }
 
         public async Task<IEnumerable<Dominio.Entidade.Exercicio>> ObterTodosExercicios()

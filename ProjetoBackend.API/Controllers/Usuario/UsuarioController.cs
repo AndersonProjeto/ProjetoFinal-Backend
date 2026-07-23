@@ -1,9 +1,11 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using ProjetoBackend.API.Extensoes;
 using ProjetoBackend.API.Validadores;
 using ProjetoBackend.Aplicacao.DTOs.Usuario;
 using ProjetoBackend.Aplicacao.Login;
 using ProjetoBackend.Aplicacao.Login.DTO;
+using ProjetoBackend.Aplicacao.Login.Interface;
 using ProjetoBackend.Aplicacao.Usuarios.Interfaces;
 using ProjetoBackend.Dominio.DTOs.Usuario;
 
@@ -15,9 +17,9 @@ namespace ProjetoBackend.API.Controllers.Usuario
     public class UsuariosController : ControllerBase
     {
         private readonly IUsuarioAplicacao _usuarioAplicacao;
-        private readonly LoginAutorizacaoAplicacao _loginAplicacao;
+        private readonly ILoginAutorizacaoAplicacao _loginAplicacao;
 
-        public UsuariosController(IUsuarioAplicacao usuarioAplicacao, LoginAutorizacaoAplicacao loginAplicacao)
+        public UsuariosController(IUsuarioAplicacao usuarioAplicacao, ILoginAutorizacaoAplicacao loginAplicacao)
         {
             _usuarioAplicacao = usuarioAplicacao;
             _loginAplicacao = loginAplicacao;
@@ -54,6 +56,8 @@ namespace ProjetoBackend.API.Controllers.Usuario
         [HttpGet("{usuarioId}")]
         public async Task<IActionResult> ObterPorId(int usuarioId)
         {
+            User.GarantirDonoDoRecurso(usuarioId);
+
             var usuario = await _usuarioAplicacao.ObterId(usuarioId);
             if (usuario == null) return NotFound();
 
@@ -63,6 +67,9 @@ namespace ProjetoBackend.API.Controllers.Usuario
         [HttpPut]
         public async Task<IActionResult> Atualizar([FromBody] AtualizarUsuarioDTO dto)
         {
+            // A identidade vem do token, não do corpo da requisição.
+            dto.UsuarioId = User.ObterUsuarioId();
+
             await _usuarioAplicacao.AtualizarUsuario(dto);
             return NoContent();
         }
@@ -70,6 +77,8 @@ namespace ProjetoBackend.API.Controllers.Usuario
         [HttpPatch("alterar-senha")]
         public async Task<IActionResult> AlterarSenha([FromBody] AlterarSenhaDTO dto)
         {
+            dto.UsuarioId = User.ObterUsuarioId();
+
             await _usuarioAplicacao.AlterarSenha(dto);
             return Ok(new { mensagem = "Senha alterada com sucesso!" });
         }
@@ -77,6 +86,8 @@ namespace ProjetoBackend.API.Controllers.Usuario
         [HttpDelete("{id}")]
         public async Task<IActionResult> Deletar(int id)
         {
+            User.GarantirDonoDoRecurso(id);
+
             await _usuarioAplicacao.DeletarUsuario(id);
             return NoContent();
         }

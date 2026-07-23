@@ -7,13 +7,13 @@ using ProjetoBackend.Repositorio.Interfaces;
 
 namespace ProjetoBackend.Aplicacao.Login
 {
-    public class LoginAutorizacaoAplicacao
+    public class LoginAutorizacaoAplicacao : ILoginAutorizacaoAplicacao
     {
         private readonly IUsuarioRepositorio _usuarioRepositorio;
-        private readonly ISenhahashAplicacao _senhahashAplicacao;
+        private readonly ISenhaHashAplicacao _senhahashAplicacao;
         private readonly IJwtAplicacao _jwtAplicacao;
 
-        public LoginAutorizacaoAplicacao(IUsuarioRepositorio usuarioRepositorio, ISenhahashAplicacao senhahashAplicacao, IJwtAplicacao jwtAplicacao)
+        public LoginAutorizacaoAplicacao(IUsuarioRepositorio usuarioRepositorio, ISenhaHashAplicacao senhahashAplicacao, IJwtAplicacao jwtAplicacao)
         {
             _usuarioRepositorio = usuarioRepositorio;
             _senhahashAplicacao = senhahashAplicacao;
