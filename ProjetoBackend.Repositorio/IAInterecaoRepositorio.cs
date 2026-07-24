@@ -1,12 +1,14 @@
-﻿using Dapper;
+using Dapper;
 using Microsoft.Extensions.Configuration;
 using ProjetoBackend.Dominio.Entidade;
-using ProjetoBackend.Repositorio.Contexto;
 using ProjetoBackend.Repositorio.Interfaces;
-using System.Data;
 
 namespace ProjetoBackend.Repositorio
 {
+    /// <summary>
+    /// No PostgreSQL os objetos sp* sao FUNCTIONS, chamadas com SQL de texto
+    /// em vez de CommandType.StoredProcedure.
+    /// </summary>
     public class IAInterecaoRepositorio : BaseRepositorio, IIAInteracaoRepositorio
     {
         public IAInterecaoRepositorio(IConfiguration configuration)
@@ -19,14 +21,15 @@ namespace ProjetoBackend.Repositorio
             using var conn = CriarConexao();
 
             return await conn.QuerySingleAsync<int>(
-                "spIAInteracaoCriar",
+                """
+                SELECT "spIAInteracaoCriar"(@UsuarioId, @Pergunta, @Resposta)
+                """,
                 new
                 {
                     interacao.UsuarioId,
                     interacao.Pergunta,
                     interacao.Resposta
-                },
-                commandType: CommandType.StoredProcedure
+                }
             );
         }
 
@@ -35,12 +38,10 @@ namespace ProjetoBackend.Repositorio
             using var conn = CriarConexao();
 
             return await conn.QueryAsync<IAInteracao>(
-                "spIAInteracaoListarPorUsuario",
-                new
-                {
-                    UsuarioId = usuarioId
-                },
-                commandType: CommandType.StoredProcedure
+                """
+                SELECT * FROM "spIAInteracaoListarPorUsuario"(@UsuarioId)
+                """,
+                new { UsuarioId = usuarioId }
             );
         }
 
@@ -49,28 +50,27 @@ namespace ProjetoBackend.Repositorio
             using var conn = CriarConexao();
 
             return await conn.QuerySingleOrDefaultAsync<IAInteracao>(
-                "spIAInteracaoObterUltima",
-                new
-                {
-                    UsuarioId = usuarioId
-                },
-                commandType: CommandType.StoredProcedure
+                """
+                SELECT * FROM "spIAInteracaoObterUltima"(@UsuarioId)
+                """,
+                new { UsuarioId = usuarioId }
             );
         }
+
         public async Task<IEnumerable<IAInteracao>> ListarUltimasInteracoes(int usuarioId, int quantidade)
         {
             using var conn = CriarConexao();
 
             return await conn.QueryAsync<IAInteracao>(
-                "spIAInteracaoObterUltimos",
+                """
+                SELECT * FROM "spIAInteracaoObterUltimos"(@UsuarioId, @Quantidade)
+                """,
                 new
                 {
                     UsuarioId = usuarioId,
                     Quantidade = quantidade
-                },
-                commandType: CommandType.StoredProcedure
+                }
             );
         }
-
     }
 }

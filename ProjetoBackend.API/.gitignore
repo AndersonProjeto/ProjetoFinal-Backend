@@ -13,8 +13,11 @@ obj/
 .idea/
 
 # ASP.NET
-appsettings.json
+# appsettings.json e versionado de proposito: guarda so configuracao nao-secreta
+# (endpoints, CORS, logging). Segredos ficam em user-secrets no dev e em
+# variaveis de ambiente na nuvem — nunca neste arquivo.
 appsettings.Development.json
+appsettings.Local.json
 
 # Logs
 *.log

@@ -1,13 +1,15 @@
-﻿using Dapper;
+using Dapper;
 using Microsoft.Extensions.Configuration;
 using ProjetoBackend.Aplicacao.DTOs.TreinoExercicio;
 using ProjetoBackend.Dominio.Entidade;
-using ProjetoBackend.Repositorio.Contexto;
 using ProjetoBackend.Repositorio.Interfaces;
-using System.Data;
 
 namespace ProjetoBackend.Repositorio
 {
+    /// <summary>
+    /// No PostgreSQL os objetos sp* sao FUNCTIONS, chamadas com SQL de texto
+    /// em vez de CommandType.StoredProcedure.
+    /// </summary>
     public class TreinoExercicioRepositorio : BaseRepositorio, ITreinoExercicioRepositorio
     {
         public TreinoExercicioRepositorio(IConfiguration configuration)
@@ -20,7 +22,9 @@ namespace ProjetoBackend.Repositorio
             using var conn = CriarConexao();
 
             return await conn.QuerySingleAsync<int>(
-                "spTreinoExercicioCriar",
+                """
+                SELECT "spTreinoExercicioCriar"(@TreinoId, @ExercicioId, @Series, @Repeticoes, @DescansoSegundos)
+                """,
                 new
                 {
                     treinoExercicio.TreinoId,
@@ -28,8 +32,7 @@ namespace ProjetoBackend.Repositorio
                     treinoExercicio.Series,
                     treinoExercicio.Repeticoes,
                     treinoExercicio.DescansoSegundos
-                },
-                commandType: CommandType.StoredProcedure
+                }
             );
         }
 
@@ -38,15 +41,16 @@ namespace ProjetoBackend.Repositorio
             using var conn = CriarConexao();
 
             await conn.ExecuteAsync(
-                "spTreinoExercicioAtualizar",
+                """
+                SELECT "spTreinoExercicioAtualizar"(@TreinoExercicioId, @Series, @Repeticoes, @DescansoSegundos)
+                """,
                 new
                 {
                     treinoExercicio.TreinoExercicioId,
                     treinoExercicio.Series,
                     treinoExercicio.Repeticoes,
                     treinoExercicio.DescansoSegundos
-                },
-                commandType: CommandType.StoredProcedure
+                }
             );
         }
 
@@ -55,9 +59,10 @@ namespace ProjetoBackend.Repositorio
             using var conn = CriarConexao();
 
             await conn.ExecuteAsync(
-                "spTreinoExercicioDeletar",
-                new { TreinoExercicioId = treinoExercicioId },
-                commandType: CommandType.StoredProcedure
+                """
+                SELECT "spTreinoExercicioDeletar"(@TreinoExercicioId)
+                """,
+                new { TreinoExercicioId = treinoExercicioId }
             );
         }
 
@@ -66,7 +71,9 @@ namespace ProjetoBackend.Repositorio
             using var conn = CriarConexao();
 
             return await conn.QueryAsync<TreinoExercicioDTO>(
-                "SELECT * FROM vwTreinoExerciciosDetalhe WHERE TreinoId = @TreinoId",
+                """
+                SELECT * FROM "vwTreinoExerciciosDetalhe" WHERE "TreinoId" = @TreinoId
+                """,
                 new { TreinoId = treinoId }
             );
         }
@@ -76,9 +83,10 @@ namespace ProjetoBackend.Repositorio
             using var conn = CriarConexao();
 
             return await conn.QueryFirstOrDefaultAsync<TreinoExercicio>(
-                "spTreinoExercicioObter",
-                new { TreinoExercicioId = TreinoExercicioId },
-                commandType: CommandType.StoredProcedure
+                """
+                SELECT * FROM "spTreinoExercicioObter"(@TreinoExercicioId)
+                """,
+                new { TreinoExercicioId = TreinoExercicioId }
             );
         }
     }

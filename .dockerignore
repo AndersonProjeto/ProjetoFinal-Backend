@@ -1,0 +1,21 @@
+# Artefatos de build locais: copiar bin/obj do host quebra o restore dentro da
+# imagem, porque os caminhos dos assets apontam para a maquina de origem.
+**/bin/
+**/obj/
+
+**/.vs/
+**/.idea/
+**/.vscode/
+.git/
+.gitignore
+
+# Segredos e configuracao local nunca entram na imagem: em producao tudo vem de
+# variaveis de ambiente.
+**/appsettings.Development.json
+**/appsettings.Local.json
+**/*.user
+**/*.env
+
+**/*.md
+Dockerfile
+.dockerignore

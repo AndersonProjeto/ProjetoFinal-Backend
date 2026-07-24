@@ -1,13 +1,18 @@
-﻿using Dapper;
+using Dapper;
 using Microsoft.Extensions.Configuration;
 using ProjetoBackend.Aplicacao.DTOs.Evolucao;
 using ProjetoBackend.Dominio.Entidade;
-using ProjetoBackend.Repositorio.Contexto;
 using ProjetoBackend.Repositorio.Interfaces;
-using System.Data;
 
 namespace ProjetoBackend.Repositorio
 {
+    /// <summary>
+    /// No PostgreSQL os objetos sp* sao FUNCTIONS, nao procedures: procedure do
+    /// Postgres nao devolve result set para o Dapper. Por isso todas as chamadas
+    /// usam SQL de texto (SELECT ...) em vez de CommandType.StoredProcedure.
+    /// Os identificadores vao aspeados porque o EF Core cria as tabelas em
+    /// PascalCase e o Postgres rebaixaria os nomes sem as aspas.
+    /// </summary>
     public class EvolucaoRepositorio : BaseRepositorio, IEvolucaoRepositorio
     {
         public EvolucaoRepositorio(IConfiguration configuration)
@@ -20,7 +25,9 @@ namespace ProjetoBackend.Repositorio
             using var conn = CriarConexao();
 
             return await conn.QuerySingleAsync<int>(
-                "spEvolucaoCriar",
+                """
+                SELECT "spEvolucaoCriar"(@UsuarioId, @PesoKg, @CinturaCm, @BracoCm, @CoxaCm, @DataRegistro)
+                """,
                 new
                 {
                     evolucao.UsuarioId,
@@ -29,9 +36,7 @@ namespace ProjetoBackend.Repositorio
                     evolucao.BracoCm,
                     evolucao.CoxaCm,
                     evolucao.DataRegistro
-
-                },
-                commandType: CommandType.StoredProcedure
+                }
             );
         }
 
@@ -40,7 +45,9 @@ namespace ProjetoBackend.Repositorio
             using var conn = CriarConexao();
 
             await conn.ExecuteAsync(
-                "spEvolucaoAtualizar",
+                """
+                SELECT "spEvolucaoAtualizar"(@EvolucaoId, @PesoKg, @CinturaCm, @BracoCm, @CoxaCm)
+                """,
                 new
                 {
                     evolucao.EvolucaoId,
@@ -48,8 +55,7 @@ namespace ProjetoBackend.Repositorio
                     evolucao.CinturaCm,
                     evolucao.BracoCm,
                     evolucao.CoxaCm
-                },
-                commandType: CommandType.StoredProcedure
+                }
             );
         }
 
@@ -58,9 +64,10 @@ namespace ProjetoBackend.Repositorio
             using var conn = CriarConexao();
 
             return await conn.QuerySingleOrDefaultAsync<Evolucao>(
-                "spEvolucaoObter",
-                new { EvolucaoId = evolucaoId },
-                commandType: CommandType.StoredProcedure
+                """
+                SELECT * FROM "spEvolucaoObter"(@EvolucaoId)
+                """,
+                new { EvolucaoId = evolucaoId }
             );
         }
 
@@ -69,20 +76,22 @@ namespace ProjetoBackend.Repositorio
             using var conn = CriarConexao();
 
             return await conn.QuerySingleOrDefaultAsync<Evolucao>(
-                "spEvolucaoObterUltima",
-                new { UsuarioId = usuarioId },
-                commandType: CommandType.StoredProcedure
+                """
+                SELECT * FROM "spEvolucaoObterUltima"(@UsuarioId)
+                """,
+                new { UsuarioId = usuarioId }
             );
         }
 
-        public async Task<IEnumerable<Evolucao>> ListarPorUsuario(int usuarioId) 
+        public async Task<IEnumerable<Evolucao>> ListarPorUsuario(int usuarioId)
         {
             using var conn = CriarConexao();
 
             return await conn.QueryAsync<Evolucao>(
-                "spEvolucaoListarPorUsuario",
-                new { UsuarioId = usuarioId },
-                commandType: CommandType.StoredProcedure
+                """
+                SELECT * FROM "spEvolucaoListarPorUsuario"(@UsuarioId)
+                """,
+                new { UsuarioId = usuarioId }
             );
         }
 
@@ -91,9 +100,11 @@ namespace ProjetoBackend.Repositorio
             using var conn = CriarConexao();
 
             return await conn.QuerySingleOrDefaultAsync<EvolucaoResumoDTO>(
-                @"SELECT *
-                  FROM vwEvolucaoResumo
-                  WHERE UsuarioId = @UsuarioId",
+                """
+                SELECT *
+                FROM "vwEvolucaoResumo"
+                WHERE "UsuarioId" = @UsuarioId
+                """,
                 new { UsuarioId = usuarioId }
             );
         }
@@ -103,10 +114,12 @@ namespace ProjetoBackend.Repositorio
             using var conn = CriarConexao();
 
             return await conn.QueryAsync<EvolucaoHistoricoDTO>(
-                @"SELECT *
-                  FROM vwEvolucaoHistorico
-                  WHERE UsuarioId = @UsuarioId
-                  ORDER BY DataRegistro DESC",
+                """
+                SELECT *
+                FROM "vwEvolucaoHistorico"
+                WHERE "UsuarioId" = @UsuarioId
+                ORDER BY "DataRegistro" DESC
+                """,
                 new { UsuarioId = usuarioId }
             );
         }
@@ -116,7 +129,9 @@ namespace ProjetoBackend.Repositorio
             using var conn = CriarConexao();
 
             return await conn.ExecuteScalarAsync<decimal>(
-                "SELECT dbo.fnEvolucaoPesoInicial(@UsuarioId)",
+                """
+                SELECT "fnEvolucaoPesoInicial"(@UsuarioId)
+                """,
                 new { UsuarioId = usuarioId }
             );
         }
@@ -126,7 +141,9 @@ namespace ProjetoBackend.Repositorio
             using var conn = CriarConexao();
 
             return await conn.ExecuteScalarAsync<decimal>(
-                "SELECT dbo.fnEvolucaoDiferencaPeso(@UsuarioId)",
+                """
+                SELECT "fnEvolucaoDiferencaPeso"(@UsuarioId)
+                """,
                 new { UsuarioId = usuarioId }
             );
         }
@@ -136,7 +153,9 @@ namespace ProjetoBackend.Repositorio
             using var conn = CriarConexao();
 
             return await conn.ExecuteScalarAsync<decimal?>(
-                "SELECT dbo.fnEvolucaoCinturaInicial(@UsuarioId)",
+                """
+                SELECT "fnEvolucaoCinturaInicial"(@UsuarioId)
+                """,
                 new { UsuarioId = usuarioId }
             );
         }
@@ -146,7 +165,9 @@ namespace ProjetoBackend.Repositorio
             using var conn = CriarConexao();
 
             return await conn.ExecuteScalarAsync<decimal?>(
-                "SELECT dbo.fnEvolucaoDiferencaCintura(@UsuarioId)",
+                """
+                SELECT "fnEvolucaoDiferencaCintura"(@UsuarioId)
+                """,
                 new { UsuarioId = usuarioId }
             );
         }
@@ -156,7 +177,9 @@ namespace ProjetoBackend.Repositorio
             using var conn = CriarConexao();
 
             return await conn.ExecuteScalarAsync<decimal?>(
-                "SELECT dbo.fnEvolucaoBracoInicial(@UsuarioId)",
+                """
+                SELECT "fnEvolucaoBracoInicial"(@UsuarioId)
+                """,
                 new { UsuarioId = usuarioId }
             );
         }
@@ -166,7 +189,9 @@ namespace ProjetoBackend.Repositorio
             using var conn = CriarConexao();
 
             return await conn.ExecuteScalarAsync<decimal?>(
-                "SELECT dbo.fnEvolucaoDiferencaBraco(@UsuarioId)",
+                """
+                SELECT "fnEvolucaoDiferencaBraco"(@UsuarioId)
+                """,
                 new { UsuarioId = usuarioId }
             );
         }
@@ -176,7 +201,9 @@ namespace ProjetoBackend.Repositorio
             using var conn = CriarConexao();
 
             return await conn.ExecuteScalarAsync<decimal?>(
-                "SELECT dbo.fnEvolucaoCoxaInicial(@UsuarioId)",
+                """
+                SELECT "fnEvolucaoCoxaInicial"(@UsuarioId)
+                """,
                 new { UsuarioId = usuarioId }
             );
         }
@@ -186,7 +213,9 @@ namespace ProjetoBackend.Repositorio
             using var conn = CriarConexao();
 
             return await conn.ExecuteScalarAsync<decimal?>(
-                "SELECT dbo.fnEvolucaoDiferencaCoxa(@UsuarioId)",
+                """
+                SELECT "fnEvolucaoDiferencaCoxa"(@UsuarioId)
+                """,
                 new { UsuarioId = usuarioId }
             );
         }

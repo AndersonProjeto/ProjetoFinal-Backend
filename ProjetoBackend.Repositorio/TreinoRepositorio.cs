@@ -1,13 +1,15 @@
-﻿using Dapper;
+using Dapper;
 using Microsoft.Extensions.Configuration;
 using ProjetoBackend.Aplicacao.DTOs.Treino;
 using ProjetoBackend.Dominio.Entidade;
-using ProjetoBackend.Repositorio.Contexto;
 using ProjetoBackend.Repositorio.Interfaces;
-using System.Data;
 
 namespace ProjetoBackend.Repositorio
 {
+    /// <summary>
+    /// No PostgreSQL os objetos sp* sao FUNCTIONS, chamadas com SQL de texto
+    /// em vez de CommandType.StoredProcedure.
+    /// </summary>
     public class TreinoRepositorio : BaseRepositorio, ITreinoRepositorio
     {
         public TreinoRepositorio(IConfiguration configuration) : base(configuration)
@@ -19,13 +21,14 @@ namespace ProjetoBackend.Repositorio
             using var conn = CriarConexao();
 
             return await conn.QuerySingleAsync<int>(
-                "spTreinoCriar",
+                """
+                SELECT "spTreinoCriar"(@UsuarioId, @NomeTreino)
+                """,
                 new
                 {
                     treino.UsuarioId,
                     treino.NomeTreino
-                },
-                commandType: CommandType.StoredProcedure
+                }
             );
         }
 
@@ -34,13 +37,14 @@ namespace ProjetoBackend.Repositorio
             using var conn = CriarConexao();
 
             await conn.ExecuteAsync(
-                "spTreinoAtualizar",
+                """
+                SELECT "spTreinoAtualizar"(@TreinoId, @NomeTreino)
+                """,
                 new
                 {
                     treino.TreinoId,
                     treino.NomeTreino
-                },
-                commandType: CommandType.StoredProcedure
+                }
             );
         }
 
@@ -49,9 +53,10 @@ namespace ProjetoBackend.Repositorio
             using var conn = CriarConexao();
 
             await conn.ExecuteAsync(
-                "spTreinoDeletar",
-                new { TreinoId = treinoId },
-                commandType: CommandType.StoredProcedure
+                """
+                SELECT "spTreinoDeletar"(@TreinoId)
+                """,
+                new { TreinoId = treinoId }
             );
         }
 
@@ -60,9 +65,10 @@ namespace ProjetoBackend.Repositorio
             using var conn = CriarConexao();
 
             return await conn.QuerySingleOrDefaultAsync<Treino>(
-                "spTreinoObterPorID",
-                new { TreinoId = treinoId },
-                commandType: CommandType.StoredProcedure
+                """
+                SELECT * FROM "spTreinoObterPorID"(@TreinoId)
+                """,
+                new { TreinoId = treinoId }
             );
         }
 
@@ -71,7 +77,9 @@ namespace ProjetoBackend.Repositorio
             using var conn = CriarConexao();
 
             return await conn.QueryAsync<TreinoPorUsuarioDTO>(
-                "SELECT * FROM vwTreinosPorUsuario WHERE UsuarioId = @UsuarioId",
+                """
+                SELECT * FROM "vwTreinosPorUsuario" WHERE "UsuarioId" = @UsuarioId
+                """,
                 new { UsuarioId = usuarioId }
             );
         }
@@ -82,7 +90,9 @@ namespace ProjetoBackend.Repositorio
 
             // Filtra na origem: sem o WHERE, a view devolve os treinos de todos os usuários.
             return await conn.QueryAsync<TreinoResumoDTO>(
-                "SELECT * FROM vwTreinoResumo WHERE UsuarioId = @UsuarioId",
+                """
+                SELECT * FROM "vwTreinoResumo" WHERE "UsuarioId" = @UsuarioId
+                """,
                 new { UsuarioId = usuarioId }
             );
         }
@@ -92,7 +102,9 @@ namespace ProjetoBackend.Repositorio
             using var conn = CriarConexao();
 
             return await conn.ExecuteScalarAsync<int>(
-                "SELECT dbo.fnTreinoTotalExercicios(@TreinoId)",
+                """
+                SELECT "fnTreinoTotalExercicios"(@TreinoId)
+                """,
                 new { TreinoId = treinoId }
             );
         }
@@ -102,17 +114,22 @@ namespace ProjetoBackend.Repositorio
             using var conn = CriarConexao();
 
             return await conn.ExecuteScalarAsync<int>(
-                "SELECT dbo.fnTreinoTotalUsuario(@UsuarioId)",
+                """
+                SELECT "fnTreinoTotalUsuario"(@UsuarioId)
+                """,
                 new { UsuarioId = usuarioId }
             );
         }
+
         public async Task<IEnumerable<Treino>> ListarEntidadesPorUsuario(int usuarioId)
         {
             using var conn = CriarConexao();
+
             return await conn.QueryAsync<Treino>(
-                "spTreinoListarPorUsuario",
-                new { UsuarioId = usuarioId },
-                commandType: CommandType.StoredProcedure
+                """
+                SELECT * FROM "spTreinoListarPorUsuario"(@UsuarioId)
+                """,
+                new { UsuarioId = usuarioId }
             );
         }
     }

@@ -1,5 +1,4 @@
-﻿using Azure;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using ProjetoBackend.Services.DtoService;
 using System.Net.Http.Headers;
 using System.Text;

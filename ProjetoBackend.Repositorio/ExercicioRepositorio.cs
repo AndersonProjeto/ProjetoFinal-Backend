@@ -1,14 +1,17 @@
-﻿using Dapper;
+using Dapper;
 using Microsoft.Extensions.Configuration;
 using ProjetoBackend.Aplicacao.DTOs.Exercicio;
 using ProjetoBackend.Dominio.DTOs.Exercicio;
 using ProjetoBackend.Dominio.Entidade;
 using ProjetoBackend.Dominio.Enum;
 using ProjetoBackend.Repositorio.Interfaces;
-using System.Data;
 
 namespace ProjetoBackend.Repositorio
 {
+    /// <summary>
+    /// No PostgreSQL os objetos sp* sao FUNCTIONS, chamadas com SQL de texto
+    /// em vez de CommandType.StoredProcedure.
+    /// </summary>
     public class ExercicioRepositorio : BaseRepositorio, IExercicioRepositorio
     {
         public ExercicioRepositorio(IConfiguration configuration)
@@ -21,17 +24,19 @@ namespace ProjetoBackend.Repositorio
             using var conn = CriarConexao();
 
             return await conn.QuerySingleAsync<int>(
-                "spExercicioCriar",
+                """
+                SELECT "spExercicioCriar"(@Nome, @GrupoMuscular, @Equipamento, @Descricao, @ImagemUrl, @VideoUrl)
+                """,
                 new
                 {
                     exercicio.Nome,
-                    exercicio.GrupoMuscular,
+                    // O enum vai como int: a coluna "GrupoMuscular" e integer.
+                    GrupoMuscular = (int)exercicio.GrupoMuscular,
                     exercicio.Equipamento,
                     exercicio.Descricao,
                     exercicio.ImagemUrl,
                     exercicio.VideoUrl
-                },
-                commandType: CommandType.StoredProcedure
+                }
             );
         }
 
@@ -40,18 +45,19 @@ namespace ProjetoBackend.Repositorio
             using var conn = CriarConexao();
 
             await conn.ExecuteAsync(
-                "spExercicioAtualizar",
+                """
+                SELECT "spExercicioAtualizar"(@ExercicioId, @Nome, @GrupoMuscular, @Equipamento, @Descricao, @ImagemUrl, @VideoUrl)
+                """,
                 new
                 {
                     exercicio.ExercicioId,
                     exercicio.Nome,
-                    exercicio.GrupoMuscular,
+                    GrupoMuscular = (int)exercicio.GrupoMuscular,
                     exercicio.Equipamento,
                     exercicio.Descricao,
                     exercicio.ImagemUrl,
                     exercicio.VideoUrl
-                },
-                commandType: CommandType.StoredProcedure
+                }
             );
         }
 
@@ -60,9 +66,10 @@ namespace ProjetoBackend.Repositorio
             using var conn = CriarConexao();
 
             await conn.ExecuteAsync(
-                "spExercicioDeletar",
-                new { ExercicioId = exercicioId },
-                commandType: CommandType.StoredProcedure
+                """
+                SELECT "spExercicioDeletar"(@ExercicioId)
+                """,
+                new { ExercicioId = exercicioId }
             );
         }
 
@@ -71,9 +78,10 @@ namespace ProjetoBackend.Repositorio
             using var conn = CriarConexao();
 
             return await conn.QueryAsync<Exercicio>(
-                "spExercicioPorGrupoMuscular",
-                new { GrupoMuscular = grupoMuscular },
-                commandType: CommandType.StoredProcedure
+                """
+                SELECT * FROM "spExercicioPorGrupoMuscular"(@GrupoMuscular)
+                """,
+                new { GrupoMuscular = (int)grupoMuscular }
             );
         }
 
@@ -82,9 +90,10 @@ namespace ProjetoBackend.Repositorio
             using var conn = CriarConexao();
 
             return await conn.QuerySingleOrDefaultAsync<Exercicio>(
-                "spExercicioObter",
-                new { ExercicioId = exercicioId },
-                commandType: CommandType.StoredProcedure
+                """
+                SELECT * FROM "spExercicioObter"(@ExercicioId)
+                """,
+                new { ExercicioId = exercicioId }
             );
         }
 
@@ -93,8 +102,9 @@ namespace ProjetoBackend.Repositorio
             using var conn = CriarConexao();
 
             return await conn.QueryAsync<Exercicio>(
-                "spExercicioListar",
-                commandType: CommandType.StoredProcedure
+                """
+                SELECT * FROM "spExercicioListar"()
+                """
             );
         }
 
@@ -103,7 +113,9 @@ namespace ProjetoBackend.Repositorio
             using var conn = CriarConexao();
 
             return await conn.QuerySingleOrDefaultAsync<ExercicioResumoDto>(
-                "SELECT * FROM vwExercicioResumo WHERE ExercicioId = @ExercicioId",
+                """
+                SELECT * FROM "vwExercicioResumo" WHERE "ExercicioId" = @ExercicioId
+                """,
                 new { ExercicioId = exercicioId }
             );
         }
@@ -113,7 +125,9 @@ namespace ProjetoBackend.Repositorio
             using var conn = CriarConexao();
 
             return await conn.QuerySingleOrDefaultAsync<ExercicioDetalhadoDto>(
-                "SELECT * FROM vwExercicioDetalhado WHERE ExercicioId = @ExercicioId",
+                """
+                SELECT * FROM "vwExercicioDetalhado" WHERE "ExercicioId" = @ExercicioId
+                """,
                 new { ExercicioId = exercicioId }
             );
         }
@@ -122,14 +136,21 @@ namespace ProjetoBackend.Repositorio
         {
             using var conn = CriarConexao();
 
-            using var multi = await conn.QueryMultipleAsync(
-                "spExercicioPaginacao",
-                new { Pagina = pagina, TamanhoPagina = tamanhoPagina },
-                commandType: CommandType.StoredProcedure
+            // A procedure original devolvia dois result sets num QueryMultipleAsync.
+            // Function no Postgres devolve apenas um, entao a contagem e a pagina
+            // viraram duas chamadas independentes.
+            var total = await conn.ExecuteScalarAsync<int>(
+                """
+                SELECT "spExercicioContarTodos"()
+                """
             );
 
-            var total = await multi.ReadSingleAsync<int>();
-            var itens = await multi.ReadAsync<Exercicio>();
+            var itens = await conn.QueryAsync<Exercicio>(
+                """
+                SELECT * FROM "spExercicioPaginacao"(@Pagina, @TamanhoPagina)
+                """,
+                new { Pagina = pagina, TamanhoPagina = tamanhoPagina }
+            );
 
             return new PaginaResultado<Exercicio>
             {

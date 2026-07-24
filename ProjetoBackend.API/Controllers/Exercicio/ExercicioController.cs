@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
+using ProjetoBackend.API.Extensoes;
 using ProjetoBackend.Aplicacao.Exercicio.Interface;
 using ProjetoBackend.Aplicacao.ExercicioAplicacao.Aplicacao;
 using ProjetoBackend.Dominio.DTOs.Exercicio;
@@ -7,6 +9,11 @@ using ProjetoBackend.Dominio.Enum;
 
 namespace ProjetoBackend.API.Controllers
 {
+    /// <summary>
+    /// O catalogo de exercicios e global: um registro alterado aqui vale para todos
+    /// os usuarios. Por isso leitura e liberada a qualquer autenticado, mas escrita
+    /// exige a politica de administrador (ver AdicionarAutorizacaoAdmin).
+    /// </summary>
     [Authorize]
     [ApiController]
     [Route("api/[controller]")]
@@ -22,6 +29,7 @@ namespace ProjetoBackend.API.Controllers
         }
 
 
+        [Authorize(Policy = ServicosExtensoes.PoliticaAdmin)]
         [HttpPost]
         public async Task<IActionResult> Adicionar([FromBody] AdicionarExercicioDTO dto)
         {
@@ -37,6 +45,7 @@ namespace ProjetoBackend.API.Controllers
             );
         }
 
+        [Authorize(Policy = ServicosExtensoes.PoliticaAdmin)]
         [HttpPut]
         public async Task<IActionResult> Atualizar([FromBody] AtualizarExercicioDTO dto)
         {
@@ -48,6 +57,7 @@ namespace ProjetoBackend.API.Controllers
             return NoContent();
         }
 
+        [Authorize(Policy = ServicosExtensoes.PoliticaAdmin)]
         [HttpDelete("{exercicioId}")]
         public async Task<IActionResult> Deletar(int exercicioId)
         {
@@ -108,6 +118,10 @@ namespace ProjetoBackend.API.Controllers
 
             return Ok(resumo);
         }
+        // Consome cota da RapidAPI paga: alem de exigir admin, entra na politica de
+        // rate limit restrita, junto com os endpoints de IA.
+        [Authorize(Policy = ServicosExtensoes.PoliticaAdmin)]
+        [EnableRateLimiting(RateLimitingExtensoes.PoliticaIa)]
         [HttpPost("{exercicioId}/importar-imagem")]
         public async Task<IActionResult> ImportarImagem(int exercicioId)
         {
