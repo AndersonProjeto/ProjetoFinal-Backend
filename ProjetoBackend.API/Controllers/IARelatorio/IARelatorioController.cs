@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using ProjetoBackend.API.Extensoes;
 using ProjetoBackend.Aplicacao.DTOs.Evolucao;
 using ProjetoBackend.Dominio.Entidade;
@@ -11,6 +12,7 @@ namespace ProjetoBackend.API.Controllers.IARelatorio
     [Authorize]
     [ApiController]
     [Route("api/[controller]")]
+    [EnableRateLimiting(RateLimitingExtensoes.PoliticaIa)]
     public class IARelatorioController : ControllerBase
     {
         private readonly IARelatorioService _relatorioService;

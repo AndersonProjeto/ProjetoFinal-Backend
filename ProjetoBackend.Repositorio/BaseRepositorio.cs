@@ -1,5 +1,5 @@
-﻿using Microsoft.Data.SqlClient;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+using Npgsql;
 using Microsoft.Extensions.Configuration;
 using ProjetoBackend.Repositorio.Contexto;
 using System.Data;
@@ -18,7 +18,7 @@ namespace ProjetoBackend.Repositorio
 
         protected IDbConnection CriarConexao()
         {
-            return new SqlConnection(_connectionString);
+            return new NpgsqlConnection(_connectionString);
         }
     }
 

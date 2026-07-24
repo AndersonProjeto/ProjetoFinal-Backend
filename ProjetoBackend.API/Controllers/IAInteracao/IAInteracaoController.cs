@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using ProjetoBackend.API.Extensoes;
 using Microsoft.EntityFrameworkCore;
 using ProjetoBackend.Aplicacao.IAInteracoes.Interfaces;
@@ -12,6 +13,7 @@ namespace ProjetoBackend.API.Controllers.IAInteracao
     [Authorize]
     [ApiController]
     [Route("api/[controller]")]
+    [EnableRateLimiting(RateLimitingExtensoes.PoliticaIa)]
     public class IAInteracaoController : ControllerBase
     {
         private readonly IIAInteracaoAplicacao _iaInteracaoAplicacao;
@@ -82,7 +84,10 @@ namespace ProjetoBackend.API.Controllers.IAInteracao
             var usuarioId = User.ObterUsuarioId();
 
             if (string.IsNullOrWhiteSpace(dto.Pergunta))
-                return BadRequest("Pergunta obrigatória.");
+                return BadRequest(new { mensagem = "Pergunta obrigatória." });
+
+            if (dto.Pergunta.Length > LimitesIA.TamanhoMaximoPrompt)
+                return BadRequest(new { mensagem = $"Pergunta excede o limite de {LimitesIA.TamanhoMaximoPrompt} caracteres." });
 
             var respostaIA = await _aiService.GetAiResponseAsync(dto.Pergunta);
 

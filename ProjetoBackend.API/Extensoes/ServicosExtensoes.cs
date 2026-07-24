@@ -23,7 +23,9 @@ using ProjetoBackend.Repositorio;
 using ProjetoBackend.Repositorio.Interfaces;
 using ProjetoBackend.Repositorio.ProjetoBackend.Repositorio;
 using ProjetoBackend.Services.IAServices;
+using System.IdentityModel.Tokens.Jwt;
 using System.Net.Http.Headers;
+using System.Security.Claims;
 using System.Text;
 
 namespace ProjetoBackend.API.Extensoes
@@ -31,6 +33,7 @@ namespace ProjetoBackend.API.Extensoes
     public static class ServicosExtensoes
     {
         public const string PoliticaCorsFrontend = "MinhaPoliticaCors";
+        public const string PoliticaAdmin = "Admin";
 
         public static IServiceCollection AdicionarDependencias(this IServiceCollection services)
         {
@@ -109,6 +112,37 @@ namespace ProjetoBackend.API.Extensoes
                         )
                     };
                 });
+
+            return services;
+        }
+
+        /// <summary>
+        /// Politica de escrita no catalogo de exercicios, que e global e compartilhado
+        /// por todos os usuarios. A lista de administradores vem de "Admin:Emails" e e
+        /// comparada com a claim de email do token — evita adicionar coluna de papel
+        /// no banco, que se propagaria por todas as functions PL/pgSQL de usuario.
+        ///
+        /// Lista vazia (o padrao) significa catalogo somente leitura para todo mundo.
+        /// </summary>
+        public static IServiceCollection AdicionarAutorizacaoAdmin(this IServiceCollection services, IConfiguration configuration)
+        {
+            var administradores = new HashSet<string>(
+                configuration.GetSection("Admin:Emails").Get<string[]>() ?? Array.Empty<string>(),
+                StringComparer.OrdinalIgnoreCase);
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy(PoliticaAdmin, policy =>
+                    policy.RequireAssertion(contexto =>
+                    {
+                        // O ASP.NET mapeia 'email' para ClaimTypes.Email por padrao;
+                        // aceitamos os dois, como em ClaimsPrincipalExtensoes.
+                        var email = contexto.User.FindFirst(JwtRegisteredClaimNames.Email)?.Value
+                                    ?? contexto.User.FindFirst(ClaimTypes.Email)?.Value;
+
+                        return email is not null && administradores.Contains(email);
+                    }));
+            });
 
             return services;
         }

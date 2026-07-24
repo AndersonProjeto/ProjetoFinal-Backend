@@ -9,6 +9,7 @@
   <ItemGroup>
     <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
 	 <FrameworkReference Include="Microsoft.AspNetCore.App" />
+	 <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.*" />
   </ItemGroup>
 
   <ItemGroup>

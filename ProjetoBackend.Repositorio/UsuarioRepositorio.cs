@@ -1,4 +1,4 @@
-﻿using ProjetoBackend.Aplicacao.DTOs.Usuario;
+using ProjetoBackend.Aplicacao.DTOs.Usuario;
 using ProjetoBackend.Dominio.Entidade;
 using ProjetoBackend.Repositorio.Interfaces;
 
@@ -6,10 +6,16 @@ namespace ProjetoBackend.Repositorio
 {
     using Dapper;
     using Microsoft.Extensions.Configuration;
-    using System.Data;
 
+    // Namespace aninhado preservado do original: o registro no DI referencia
+    // ProjetoBackend.Repositorio.ProjetoBackend.Repositorio (ver ServicosExtensoes).
     namespace ProjetoBackend.Repositorio
     {
+        /// <summary>
+        /// No PostgreSQL os objetos sp* sao FUNCTIONS, chamadas com SQL de texto
+        /// em vez de CommandType.StoredProcedure. Identificadores vao aspeados
+        /// porque o EF cria as tabelas em PascalCase.
+        /// </summary>
         public class UsuarioRepositorio : BaseRepositorio, IUsuarioRepositorio
         {
             public UsuarioRepositorio(IConfiguration configuration) : base(configuration)
@@ -21,7 +27,9 @@ namespace ProjetoBackend.Repositorio
                 using var conn = CriarConexao();
 
                 return await conn.QuerySingleAsync<int>(
-                    "spUsuarioCriar",
+                    """
+                    SELECT "spUsuarioCriar"(@Nome, @Email, @SenhaHash, @DataNascimento, @AlturaCm, @AvatarEstilo, @AvatarSeed)
+                    """,
                     new
                     {
                         usuario.Nome,
@@ -31,8 +39,7 @@ namespace ProjetoBackend.Repositorio
                         usuario.AlturaCm,
                         usuario.AvatarEstilo,
                         usuario.AvatarSeed
-                    },
-                    commandType: CommandType.StoredProcedure
+                    }
                 );
             }
 
@@ -41,7 +48,9 @@ namespace ProjetoBackend.Repositorio
                 using var conn = CriarConexao();
 
                 await conn.ExecuteAsync(
-                    "spUsuarioAtualizar",
+                    """
+                    SELECT "spUsuarioAtualizar"(@UsuarioId, @Nome, @Email, @DataNascimento, @AlturaCm, @AvatarSeed, @AvatarEstilo)
+                    """,
                     new
                     {
                         usuario.UsuarioId,
@@ -49,10 +58,9 @@ namespace ProjetoBackend.Repositorio
                         usuario.Email,
                         usuario.DataNascimento,
                         usuario.AlturaCm,
-                        usuario.AvatarEstilo,
-                        usuario.AvatarSeed
-                    },
-                    commandType: CommandType.StoredProcedure
+                        usuario.AvatarSeed,
+                        usuario.AvatarEstilo
+                    }
                 );
             }
 
@@ -61,9 +69,10 @@ namespace ProjetoBackend.Repositorio
                 using var conn = CriarConexao();
 
                 await conn.ExecuteAsync(
-                    "spUsuarioDeletar",
-                    new { UsuarioId = usuarioId },
-                    commandType: CommandType.StoredProcedure
+                    """
+                    SELECT "spUsuarioDeletar"(@UsuarioId)
+                    """,
+                    new { UsuarioId = usuarioId }
                 );
             }
 
@@ -72,9 +81,10 @@ namespace ProjetoBackend.Repositorio
                 using var conn = CriarConexao();
 
                 return await conn.QuerySingleOrDefaultAsync<Usuario>(
-                    "spUsuarioObter",
-                    new { UsuarioId = usuarioId },
-                    commandType: CommandType.StoredProcedure
+                    """
+                    SELECT * FROM "spUsuarioObter"(@UsuarioId)
+                    """,
+                    new { UsuarioId = usuarioId }
                 );
             }
 
@@ -83,9 +93,10 @@ namespace ProjetoBackend.Repositorio
                 using var conn = CriarConexao();
 
                 return await conn.QuerySingleOrDefaultAsync<Usuario>(
-                    "spUsuarioObterPorEmail",
-                    new { Email = email },
-                    commandType: CommandType.StoredProcedure
+                    """
+                    SELECT * FROM "spUsuarioObterPorEmail"(@Email)
+                    """,
+                    new { Email = email }
                 );
             }
 
@@ -94,7 +105,9 @@ namespace ProjetoBackend.Repositorio
                 using var conn = CriarConexao();
 
                 return await conn.QuerySingleOrDefaultAsync<UsuarioResumoDto>(
-                    "SELECT * FROM vwUsuarioResumo WHERE UsuarioId = @UsuarioId",
+                    """
+                    SELECT * FROM "vwUsuarioResumo" WHERE "UsuarioId" = @UsuarioId
+                    """,
                     new { UsuarioId = usuarioId }
                 );
             }
@@ -104,7 +117,9 @@ namespace ProjetoBackend.Repositorio
                 using var conn = CriarConexao();
 
                 return await conn.QueryFirstOrDefaultAsync<UsuarioUltimaEvolucaoDto>(
-                    "SELECT * FROM vwUsuarioUltimaEvolucao WHERE UsuarioId = @UsuarioId",
+                    """
+                    SELECT * FROM "vwUsuarioUltimaEvolucao" WHERE "UsuarioId" = @UsuarioId
+                    """,
                     new { UsuarioId = usuarioId }
                 );
             }
@@ -114,26 +129,28 @@ namespace ProjetoBackend.Repositorio
                 using var conn = CriarConexao();
 
                 return await conn.QuerySingleOrDefaultAsync<UsuarioDetalhesDTO>(
-                    "SELECT * FROM vwUsuarioDetalhes WHERE UsuarioId = @UsuarioId",
+                    """
+                    SELECT * FROM "vwUsuarioDetalhes" WHERE "UsuarioId" = @UsuarioId
+                    """,
                     new { UsuarioId = usuarioId }
                 );
             }
+
             public async Task AtualizarSenha(int usuarioId, string senhaHash)
             {
                 using var conn = CriarConexao();
 
                 await conn.ExecuteAsync(
-                    "spUsuarioAtualizarSenha",
+                    """
+                    SELECT "spUsuarioAtualizarSenha"(@UsuarioId, @SenhaHash)
+                    """,
                     new
                     {
                         UsuarioId = usuarioId,
                         SenhaHash = senhaHash
-                    },
-                    commandType: CommandType.StoredProcedure
+                    }
                 );
             }
-
         }
-
     }
 }

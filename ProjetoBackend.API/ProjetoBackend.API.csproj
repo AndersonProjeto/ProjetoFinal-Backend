@@ -4,6 +4,7 @@
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>f956ec28-a083-4023-bab7-8773e9725590</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -11,7 +12,7 @@
 	  <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.1" />
 	  <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.6" />
 	  <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.6" />
-	  <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.6">
+	  <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.11">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>

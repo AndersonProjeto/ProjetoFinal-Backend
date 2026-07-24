@@ -29,16 +29,82 @@ Integração com uma API externa de IA
 
 ## 📋 Requisitos
 - .NET SDK 8.0
-- SQL Server
+- PostgreSQL 15+ (o projeto usa uma instância no Supabase)
 
-- 
+> **Máquina só com runtime .NET 10?** Os comandos `dotnet` precisam de roll-forward,
+> porque a solution é `net8.0`:
+> ```powershell
+> $env:DOTNET_ROLL_FORWARD = "Major"
+> dotnet build
+> ```
+
+## ⚙️ Configuração
+
+Nenhum segredo fica versionado. O `appsettings.json` guarda apenas configuração
+pública (endpoints, CORS, logging); o resto vem de **user-secrets** em
+desenvolvimento e de **variáveis de ambiente** na nuvem.
+
+| Chave | Obrigatória | O que é |
+| --- | :---: | --- |
+| `ConnectionStrings:DefaultConnection` | ✅ | String de conexão Npgsql do Supabase (Session pooler, porta 5432) |
+| `Jwt:Key` | ✅ | Chave de assinatura HMAC-SHA256 (mínimo 32 caracteres) |
+| `Jwt:Issuer` | ✅ | Emissor do token |
+| `Jwt:Audience` | ✅ | Audiência do token |
+| `GitHubModels:Token` | ✅ | Token do GitHub Models (chat da AcadIA) |
+| `GitHubModels:ApiUrl` | — | Já no `appsettings.json` |
+| `Groq:Token` | ✅ | Token da Groq (geração de relatórios) |
+| `Groq:ApiUrl` | — | Já no `appsettings.json` |
+| `ExerciseDb:ApiKey` | ✅ | Chave RapidAPI da ExerciseDB (importação de imagens) |
+| `Cors:Origens` | — | Origens liberadas. Padrão: `http://localhost:5173` |
+| `Admin:Emails` | — | E-mails com permissão de escrita no catálogo de exercícios. Vazio = catálogo somente leitura |
+
+> Sem `GitHubModels:Token` / `Groq:Token` / `ExerciseDb:ApiKey` a API sobe normalmente,
+> mas as rotas de IA e a importação de imagens respondem **500**.
+
+### Desenvolvimento — user-secrets
+
+```bash
+cd ProjetoBackend.API
+dotnet user-secrets set "ConnectionStrings:DefaultConnection" "Host=...;Port=5432;Database=postgres;Username=...;Password=...;SSL Mode=Require"
+dotnet user-secrets set "Jwt:Key" "<chave-de-no-minimo-32-caracteres>"
+dotnet user-secrets set "Jwt:Issuer" "ProjetoBackend"
+dotnet user-secrets set "Jwt:Audience" "ProjetoBackendUsuario"
+dotnet user-secrets set "GitHubModels:Token" "<token>"
+dotnet user-secrets set "Groq:Token" "<token>"
+dotnet user-secrets set "ExerciseDb:ApiKey" "<chave-rapidapi>"
+```
+
+### Produção — variáveis de ambiente
+
+O separador `:` vira `__` (dois underscores), e **listas usam índice numérico**:
+
+```
+ConnectionStrings__DefaultConnection=Host=...;Port=5432;...
+Jwt__Key=...
+Jwt__Issuer=ProjetoBackend
+Jwt__Audience=ProjetoBackendUsuario
+GitHubModels__Token=...
+Groq__Token=...
+ExerciseDb__ApiKey=...
+Cors__Origens__0=https://<seu-frontend>.vercel.app
+Admin__Emails__0=voce@exemplo.com
+```
+
+⚠️ Errar `Cors__Origens__0` não gera erro visível no servidor: a API cai no padrão
+`localhost:5173` e **todo** request do frontend falha por CORS no navegador.
+
 ## 🗄️ Banco de Dados
-- SQL Server
-- Stored Procedures
-- Functions
-- Views
+- PostgreSQL (Supabase)
+- Functions (`RETURNS TABLE`, chamadas via Dapper)
+- Views (com `security_invoker`)
+- RLS habilitada em todas as tabelas
 
-SQLServer
+Os scripts ficam em `ProjetoBackend.Repositorio/Sql/Postgres/`, embarcados no
+assembly como `EmbeddedResource` e aplicados pelas migrations do EF — não há passo
+manual de SQL no Supabase. As migrations pendentes são aplicadas **na subida da
+aplicação**.
+
+Modelo de dados
 
 <img width="1006" height="774" alt="image" src="https://github.com/user-attachments/assets/7d1de82c-9f93-47a6-ba14-3a38c3d81d49" />
 
@@ -267,6 +333,42 @@ Essa arquitetura facilita a manutenção, organização do código, escalabilida
 ## Inteligencia Artificial 
 
 Chatbot interativo voltado para treino, saúde e nutrição, oferecendo suporte ao usuário com orientações e acompanhamento para melhorar resultados e manter consistência.
+
+## ☁️ Deploy
+
+| Componente | Onde | Região |
+| --- | --- | --- |
+| API .NET 8 | Railway (Docker) | US West — Califórnia |
+| Frontend React/Vite | Vercel | CDN global |
+| Banco PostgreSQL | Supabase | us-west-2 — Oregon |
+
+A região da API acompanha a do banco: o gargalo é a conversa API↔banco, que
+acontece várias vezes por request, e não navegador↔banco.
+
+### Railway
+
+O `Dockerfile` na raiz é multi-stage (SDK 8.0 para build, ASP.NET 8.0 para
+runtime) e roda como usuário sem privilégios. Pontos a observar:
+
+- **Porta** — o Railway injeta `PORT` e faz health check nela. O `Program.cs` lê a
+  variável e faz o binding; nada a configurar.
+- **Proxy** — o container recebe HTTP puro. O `UseForwardedHeaders` recupera o
+  esquema e o IP real do cliente; sem isso o HTTPS redirect entra em loop e todo o
+  tráfego anônimo cairia numa única partição do rate limiter.
+- **Migrations** — aplicadas na subida da aplicação, então o deploy leva código e
+  schema juntos.
+- **Network Restrictions do Supabase não são viáveis**: exigem IP de saída fixo,
+  exclusivo do plano Pro do Railway.
+
+Cadastre as variáveis da seção [Configuração](#️-configuração) antes do primeiro deploy.
+
+### Vercel
+
+Defina `VITE_API_URL` como `https://<seu-app>.up.railway.app/api` (ver
+`.env.example` no repositório do frontend). O Vite lê variáveis `VITE_*` **no
+build**, não em tempo de execução: alterar o valor exige um novo deploy.
+
+Depois, adicione o domínio da Vercel em `Cors__Origens__0` no Railway.
 
 ## Melhorias Futuras
 
