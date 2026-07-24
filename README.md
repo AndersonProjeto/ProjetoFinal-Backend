@@ -61,14 +61,50 @@ desenvolvimento e de **variáveis de ambiente** na nuvem.
 > Sem `GitHubModels:Token` / `Groq:Token` / `ExerciseDb:ApiKey` a API sobe normalmente,
 > mas as rotas de IA e a importação de imagens respondem **500**.
 
+### Banco local com Docker (recomendado)
+
+Não aponte a máquina de desenvolvimento para o Supabase de produção: um teste
+destrutivo apaga dado real. Suba um Postgres descartável:
+
+```bash
+docker compose up -d      # sobe banco + API
+docker compose down       # para, preservando os dados
+docker compose down -v    # para e apaga tudo, para recomeçar do zero
+```
+
+| Serviço | Onde | O que é |
+| --- | --- | --- |
+| `postgres` | `localhost:5433` | Banco de desenvolvimento |
+| `api` | `localhost:8080` | A API pelo **mesmo `Dockerfile` do deploy** |
+
+O serviço `api` existe para conferir localmente o que vai para a nuvem, sem
+depender do Railway para descobrir que algo quebrou. Ele não atrapalha o fluxo
+normal: rodando por `dotnet run` ou pelo Visual Studio, a API sobe na `5121` e os
+dois convivem.
+
+Para mexer só no banco: `docker compose up -d postgres`.
+
+O schema inteiro — 8 tabelas com RLS, 12 views e 54 functions — é criado pelas
+migrations na primeira subida da API. O banco nasce vazio e se monta sozinho.
+
+Aponte a connection string para ele:
+
+```bash
+cd ProjetoBackend.API
+dotnet user-secrets set "ConnectionStrings:DefaultConnection" "Host=localhost;Port=5433;Database=acadia;Username=acadia;Password=acadia_local_dev;SSL Mode=Disable"
+```
+
+> A porta no host é **5433**, não 5432, para não conflitar com uma instalação de
+> PostgreSQL que já exista na máquina.
+
 ### Desenvolvimento — user-secrets
 
 ```bash
 cd ProjetoBackend.API
 dotnet user-secrets set "ConnectionStrings:DefaultConnection" "Host=...;Port=5432;Database=postgres;Username=...;Password=...;SSL Mode=Require"
 dotnet user-secrets set "Jwt:Key" "<chave-de-no-minimo-32-caracteres>"
-dotnet user-secrets set "Jwt:Issuer" "ProjetoBackend"
-dotnet user-secrets set "Jwt:Audience" "ProjetoBackendUsuario"
+dotnet user-secrets set "Jwt:Issuer" "ProjetoBackend.API"
+dotnet user-secrets set "Jwt:Audience" "ProjetoBackend.Frontend"
 dotnet user-secrets set "GitHubModels:Token" "<token>"
 dotnet user-secrets set "Groq:Token" "<token>"
 dotnet user-secrets set "ExerciseDb:ApiKey" "<chave-rapidapi>"
@@ -81,8 +117,8 @@ O separador `:` vira `__` (dois underscores), e **listas usam índice numérico*
 ```
 ConnectionStrings__DefaultConnection=Host=...;Port=5432;...
 Jwt__Key=...
-Jwt__Issuer=ProjetoBackend
-Jwt__Audience=ProjetoBackendUsuario
+Jwt__Issuer=ProjetoBackend.API
+Jwt__Audience=ProjetoBackend.Frontend
 GitHubModels__Token=...
 Groq__Token=...
 ExerciseDb__ApiKey=...

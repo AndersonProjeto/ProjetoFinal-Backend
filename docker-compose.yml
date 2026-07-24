@@ -1,0 +1,65 @@
+# Banco de desenvolvimento local.
+#
+# Existe para que ninguem precise apontar a maquina de desenvolvimento para o
+# Supabase de producao. As migrations da API criam o schema inteiro na primeira
+# subida (tabelas, functions PL/pgSQL e views), entao o banco nasce vazio e se
+# monta sozinho.
+#
+#   docker compose up -d      sobe o banco
+#   docker compose down       para, preservando os dados
+#   docker compose down -v    para e APAGA os dados (recomeca do zero)
+#
+# Postgres 16: o projeto usa "security_invoker" nas views, que exige 15 ou mais.
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: acadia-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: acadia
+      POSTGRES_PASSWORD: acadia_local_dev
+      POSTGRES_DB: acadia
+    ports:
+      # 5433 no host de proposito: evita conflito com uma instalacao de
+      # PostgreSQL que ja exista na maquina ocupando a 5432.
+      - "5433:5432"
+    volumes:
+      - acadia-dados:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U acadia -d acadia"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  # A API empacotada, usando o MESMO Dockerfile do deploy. Serve para conferir
+  # localmente o que vai para a nuvem, sem depender do Railway para descobrir
+  # que algo quebrou.
+  #
+  # Fica na 8080 de proposito: a execucao normal via `dotnet run` / Visual Studio
+  # usa a 5121, entao os dois convivem sem conflito de porta.
+  api:
+    build: .
+    container_name: acadia-api
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      PORT: 8080
+      # 'postgres' e o nome do servico: dentro da rede do compose ele resolve
+      # para o container do banco, e a porta e a interna (5432, nao 5433).
+      ConnectionStrings__DefaultConnection: "Host=postgres;Port=5432;Database=acadia;Username=acadia;Password=acadia_local_dev;SSL Mode=Disable"
+      # Valores de desenvolvimento. Nao reaproveitar em producao — la os
+      # segredos vem das variaveis do Railway.
+      Jwt__Key: "chave-apenas-para-desenvolvimento-local-nao-use-em-producao"
+      Jwt__Issuer: "ProjetoBackend.API"
+      Jwt__Audience: "ProjetoBackend.Frontend"
+      Cors__Origens__0: "http://localhost:5173"
+      Admin__Emails__0: "teste@local.dev"
+    ports:
+      - "8080:8080"
+
+volumes:
+  acadia-dados:
