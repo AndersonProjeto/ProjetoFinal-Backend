@@ -82,18 +82,25 @@ AS $$
     WHERE "ExercicioId" = p_exercicio_id;
 $$;
 
+-- Devolve tambem Descricao, ImagemUrl e VideoUrl: a tela de catalogo mostra a
+-- orientacao de execucao junto do exercicio, e sem esses campos na listagem o
+-- front precisaria de uma requisicao extra por item so para exibir o texto.
 CREATE OR REPLACE FUNCTION "spExercicioListar"()
 RETURNS TABLE (
     "ExercicioId"   INTEGER,
     "Nome"          VARCHAR(150),
     "GrupoMuscular" INTEGER,
-    "Equipamento"   VARCHAR(80)
+    "Equipamento"   VARCHAR(80),
+    "Descricao"     TEXT,
+    "ImagemUrl"     TEXT,
+    "VideoUrl"      TEXT
 )
 LANGUAGE sql
 STABLE
 SET search_path = public
 AS $$
-    SELECT e."ExercicioId", e."Nome", e."GrupoMuscular", e."Equipamento"
+    SELECT e."ExercicioId", e."Nome", e."GrupoMuscular", e."Equipamento",
+           e."Descricao", e."ImagemUrl", e."VideoUrl"
     FROM "Exercicios" e
     ORDER BY e."GrupoMuscular", e."Nome";
 $$;
