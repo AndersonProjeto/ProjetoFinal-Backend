@@ -70,6 +70,13 @@ using (var escopo = app.Services.CreateScope())
     contexto.Database.Migrate();
 }
 
+// Deixa explicito no log quais origens o CORS aceita. Configuracao errada aqui
+// falha em silencio no servidor e so aparece como requisicao bloqueada no console
+// do navegador — com esta linha, o log responde a pergunta.
+app.Logger.LogInformation(
+    "CORS liberado para: {Origens}",
+    string.Join(", ", ServicosExtensoes.LerOrigensCors(app.Configuration)));
+
 app.UseForwardedHeaders();
 
 app.UseMiddleware<TratamentoExcecoesMiddleware>();

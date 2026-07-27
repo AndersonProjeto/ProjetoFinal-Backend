@@ -147,10 +147,44 @@ namespace ProjetoBackend.API.Extensoes
             return services;
         }
 
+        /// <summary>
+        /// Origens liberadas no CORS, aceitando as duas formas de configuracao:
+        ///
+        ///   Cors__Origens__0=https://app.vercel.app   (array, uma variavel por item)
+        ///   Cors__Origens=https://app.vercel.app,https://outro.com   (lista simples)
+        ///
+        /// A segunda existe porque o formato de array e facil de errar num painel de
+        /// nuvem — basta um underscore ou o indice fora do lugar para a configuracao
+        /// ser ignorada em silencio, e o sintoma (requisicao bloqueada no navegador)
+        /// nao aponta para a causa.
+        ///
+        /// A barra final e removida: o navegador manda a origem sem ela, e
+        /// "https://app.vercel.app/" nunca daria match com "https://app.vercel.app".
+        /// </summary>
+        public static string[] LerOrigensCors(IConfiguration configuration)
+        {
+            // A lista simples e checada ANTES do array: quando existe array no
+            // appsettings.json, Get<string[]>() sempre devolve algo, e um valor unico
+            // vindo do ambiente jamais seria alcancado.
+            var valorUnico = configuration["Cors:Origens"];
+
+            var origens = !string.IsNullOrWhiteSpace(valorUnico)
+                ? valorUnico.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+                : configuration.GetSection("Cors:Origens").Get<string[]>();
+
+            if (origens is null || origens.Length == 0)
+                origens = new[] { "http://localhost:5173" };
+
+            return origens
+                .Where(o => !string.IsNullOrWhiteSpace(o))
+                .Select(o => o.Trim().TrimEnd('/'))
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .ToArray();
+        }
+
         public static IServiceCollection AdicionarCorsFrontend(this IServiceCollection services, IConfiguration configuration)
         {
-            var origens = configuration.GetSection("Cors:Origens").Get<string[]>()
-                          ?? new[] { "http://localhost:5173" };
+            var origens = LerOrigensCors(configuration);
 
             services.AddCors(options =>
             {

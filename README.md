@@ -122,12 +122,27 @@ Jwt__Audience=ProjetoBackend.Frontend
 GitHubModels__Token=...
 Groq__Token=...
 ExerciseDb__ApiKey=...
-Cors__Origens__0=https://<seu-frontend>.vercel.app
+Cors__Origens=https://<seu-frontend>.vercel.app
 Admin__Emails__0=voce@exemplo.com
 ```
 
-⚠️ Errar `Cors__Origens__0` não gera erro visível no servidor: a API cai no padrão
-`localhost:5173` e **todo** request do frontend falha por CORS no navegador.
+**CORS aceita duas formas** — use a que preferir:
+
+```
+Cors__Origens=https://app.vercel.app,https://outro.com    ← lista por vírgula
+Cors__Origens__0=https://app.vercel.app                   ← array indexado
+```
+
+A barra final é removida automaticamente, então `https://app.vercel.app/` também
+funciona. Na subida, a aplicação registra no log quais origens foram carregadas:
+
+```
+info: CORS liberado para: https://app.vercel.app
+```
+
+⚠️ Se esse log mostrar `http://localhost:5173` em produção, a variável não chegou
+na aplicação — e o sintoma é o frontend falhar em **todo** request, com erro
+visível só no console do navegador, nunca no log do servidor.
 
 ## 🗄️ Banco de Dados
 - PostgreSQL (Supabase)
